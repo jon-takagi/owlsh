@@ -5,10 +5,9 @@ const BUFFER_SIZE = 2097152;
 
 int main (int argc, char** argv)
 {
-	int found_eof = 0;
 	FILE *fp;
 	char* line = NULL;
-	do {
+	while(1) {
 		//if there be args, then do the batch mode
 		if (argc > 1) {
 			fp = fopen(argv[1], "r");
@@ -17,17 +16,20 @@ int main (int argc, char** argv)
 			fp = stdin;
 		}
 		size_t len = 0;
+		int read;
 		if(fp != NULL) {
-			getline(&line, &len, fp);
+			read = getline(&line, &len, fp);
+			if(feof(fp)) {
+				return 0;
+			}
 			printf("%s", line);
 			// handle input
 		} else {
 			fprintf(stderr, "file could not be opened\n");
-			free(line);
 			fclose(fp);
 			return 1;
 		}
-	} while (!found_eof);
+	}
 	free(line);
 	fclose(fp);
 	return 0;
