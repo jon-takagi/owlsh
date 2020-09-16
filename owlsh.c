@@ -2,7 +2,7 @@
 
 
 
-int main (int argc, char** argv) 
+int main (int argc, char** argv)
 {
 
 
@@ -18,17 +18,17 @@ int main (int argc, char** argv)
 	//else, it's interactive mode time
 
 	//this is the size of the buffer when reading commands
-	const BUFFER_SIZE = 2048;
-	
+	const BUFFER_SIZE = 2097152;
+
 	//interactive mode time
-	while (1) 
+	while (1)
 	{
 		printf("\nowlsh> ");
 
 
 
 		//make a buffer (aka a c style array) that is big
-		char buffer[BUFFER_SIZE * sizeof(char)]; 
+		char buffer[BUFFER_SIZE * sizeof(char)];
 
 
 
@@ -38,4 +38,3 @@ int main (int argc, char** argv)
 
 	}
 }
-
