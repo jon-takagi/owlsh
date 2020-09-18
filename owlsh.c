@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
-const BUFFER_SIZE = 2097152;
+
+const int BUFFER_SIZE = 2097152;
 
 int main (int argc, char** argv)
 {
@@ -18,7 +19,10 @@ int main (int argc, char** argv)
 		size_t len = 0;
 		int read;
 		if(fp != NULL) {
+			printf("owlsh> ");
 			read = getline(&line, &len, fp);
+			
+			//if end of file:
 			if(feof(fp)) {
 				return 0;
 			}
