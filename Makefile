@@ -1,5 +1,5 @@
 CXX=gcc
-CXXFLAGS=-Wall -Wextra -Werror -fast -g
+CXXFLAGS=-Wall -Wextra -Werror -Ofast -g
 LDFLAGS=$(CXXFLAGS)
 OBJ=$(SRC:.cc=.o)
 
