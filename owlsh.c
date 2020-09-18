@@ -1,13 +1,14 @@
 #include <stdio.h>
 #include <unistd.h>
+#include <linux/limits.h>
 #include <stdlib.h>
 
-const int BUFFER_SIZE = 2097152;
 
 int main (int argc, char** argv)
 {
+	int BUFFER_SIZE = sysconf(ARG_MAX);
 	FILE *fp;
-	char* line = NULL;
+	char* line[BUFFER_SIZE];
 	while(1) {
 		//if there be args, then do the batch mode
 		if (argc > 1) {
@@ -19,15 +20,18 @@ int main (int argc, char** argv)
 		size_t len = 0;
 		int read;
 		if(fp != NULL) {
-			printf("owlsh> ");
-			read = getline(&line, &len, fp);
-			
-			//if end of file:
+			read = fgets(&line, &len, fp);
 			if(feof(fp)) {
+				printf("EOF (CTRL + D) detecting, exiting\n");
 				return 0;
 			}
 			printf("%s", line);
 			// handle input
+			// ariel do this
+
+			char *args[] = {"ls", "-l", NULL};
+			handle(args);
+
 		} else {
 			fprintf(stderr, "file could not be opened\n");
 			fclose(fp);
