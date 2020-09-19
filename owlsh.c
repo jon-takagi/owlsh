@@ -2,13 +2,13 @@
 #include <unistd.h>
 #include <linux/limits.h>
 #include <stdlib.h>
-
+#include <string.h>
 
 int main (int argc, char** argv)
 {
 	int BUFFER_SIZE = sysconf(ARG_MAX);
 	FILE *fp;
-	char* line[BUFFER_SIZE];
+	char line[BUFFER_SIZE];
 	while(1) {
 		//if there be args, then do the batch mode
 		if (argc > 1) {
@@ -18,19 +18,32 @@ int main (int argc, char** argv)
 			fp = stdin;
 		}
 		size_t len = 0;
-		int read;
+		char* read;
 		if(fp != NULL) {
-			read = fgets(&line, &len, fp);
+			printf("owlsh>");
+			read = fgets(line, len, fp);
 			if(feof(fp)) {
 				printf("EOF (CTRL + D) detecting, exiting\n");
 				return 0;
 			}
 			printf("%s", line);
-			// handle input
-			// ariel do this
+	
+			//built ins for exit, cd, and path
+			char exit[] = "exit"; 
+			char *cd = "cd";
+			char* path = "path";
+
+			if (strcmp(line, exit) == 0) {
+				printf ("sick dude that says exit\n");
+			}
+
+			if (strcmp(line, cd) == 0) {
+				printf ("sick dude that says cd\n");
+			}
+
 
 			char *args[] = {"ls", "-l", NULL};
-			handle(args);
+			//handle(args);
 
 		} else {
 			fprintf(stderr, "file could not be opened\n");
