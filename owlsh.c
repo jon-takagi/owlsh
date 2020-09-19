@@ -9,20 +9,6 @@ int main (int argc, char** argv)
 	char error_message[30] = "An error has occurred\n";
 	int BUFFER_SIZE = sysconf(ARG_MAX);
 	FILE *fp;
-	//char line = (char*) malloc(BUFFER_SIZE);
-	
-
-
-
-	//char line[BUFFER_SIZE]; //we have to initialize this tho
-	
-
-	//things that cause seg faults:
-	//*line[0] = 0;
-	//char **line = (char**) malloc(8*BUFFER_SIZE);
-	//char *line = (char*) calloc(BUFFER_SIZE, sizeof(char));
-	
-
 	char *line = NULL;
 	size_t len = 0;
 	ssize_t nread;
