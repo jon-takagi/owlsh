@@ -4,6 +4,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+const int DEBUG = 0;
+
 int main (int argc, char** argv)
 {
 	char error_message[30] = "An error has occurred\n";
@@ -25,51 +27,74 @@ int main (int argc, char** argv)
 		free(line);
 		exit(1);
 	} else {
-		
 
-		printf("\nowlsh>");
+		printf("owlsh>");
 		while((nread = getline(&line, &len, fp))!= -1) {
-			const char delim[2] = " ";
+			const char delim[] = " \t\r\n\v\f";
 			char* token;
 			// this just prints what was last typed in
-			printf("this is what was just inputted:%s", line);
+			if (DEBUG) printf("this is what was just inputted:%s", line);
 	
 
 			//iterate through the tokens
 			token = strtok(line, delim);
-			printf("this is the first token:%s!!", token);
+			if (token != NULL) 
+			{
+				if (DEBUG) printf("this is the first token:%s!!", token);
 
-			
-			//built ins for exit, cd, and path
-			char exit_str[] = "exit\n"; 
-			if (strcmp(token, exit_str) == 0) {
-				printf ("sick dude that says exit\n");
-				exit(0);
+				
+				//built ins for exit, cd, and path
+				char exit_str[] = "exit"; 
+				if (strcmp(token, exit_str) == 0) {
+					if (DEBUG) printf ("sick dude that says exit\n");
+					exit(0);
+				}
+
+				char *cd = "cd"; // I want to try all the different ways of making strings
+				if (strcmp(token, cd) == 0) {
+					if (DEBUG) printf ("sick dude that says cd\n");
+					
+					//execute chdir with the next token
+
+					//first, make sure the next token exists
+					token = strtok(NULL, delim);
+					if (token == NULL) { printf("bruh u gotta put something after the cd\n"); }
+					else { 
+						char s[100];
+						if (DEBUG) printf("current directory is: %s\n", getcwd(s, 100));
+						if (DEBUG) printf("current token is: ~<3%s\n~<3", token);
+						int zeroForSuccess = chdir(token);
+						if (zeroForSuccess == 0)
+						{
+							printf("nice, your cd command worked\n");
+						}
+						else {
+							printf("ah your cd failed\n");
+						}
+						if (DEBUG) printf("NEW directory is: %s\n", getcwd(s, 100));
+					}
+				}
+	/*			char* path = "path";
+
+				
+
+				
+
+				if (strcmp(token, path) == 0) {
+					printf ("sick dude that says path\n");
+				}
+	*/
+				//start with the other tokens
+				while (token != NULL) {
+
+
+					token = strtok(NULL, delim);
+					if (DEBUG) printf("\nmoAR toKenS!!!:%s", token);
+				}
 			}
-/*			char *cd = "cd";
-			char* path = "path";
-
-			
-
-			if (strcmp(token, cd) == 0) {
-				printf ("sick dude that says cd\n");
-			}
-
-			if (strcmp(token, path) == 0) {
-				printf ("sick dude that says path\n");
-			}
-*/
-			//start with the other tokens
-			while (token != NULL) {
-
-
-				token = strtok(NULL, delim);
-				printf("\nmoAR toKenS!!!:%s", token);
-			}
-
 			//char *args[] = {"ls", "-l", NULL};
 			// handle(args);
-			printf("\nowlsh>");
+			printf("owlsh>");
 		}
 	}
 	free(line);
