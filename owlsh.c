@@ -10,8 +10,22 @@ int main (int argc, char** argv)
 	int BUFFER_SIZE = sysconf(ARG_MAX);
 	FILE *fp;
 	//char line = (char*) malloc(BUFFER_SIZE);
-	char *line[BUFFER_SIZE];
-	size_t *len = 0;
+	
+
+
+
+	//char line[BUFFER_SIZE]; //we have to initialize this tho
+	
+
+	//things that cause seg faults:
+	//*line[0] = 0;
+	//char **line = (char**) malloc(8*BUFFER_SIZE);
+	//char *line = (char*) calloc(BUFFER_SIZE, sizeof(char));
+	
+
+	char *line = NULL;
+	size_t len = 0;
+	ssize_t nread;
 	//if there be args, then assume it's a file and read from the first one
 	if (argc > 1) {
 		fp = fopen(argv[1], "r");
@@ -26,18 +40,22 @@ int main (int argc, char** argv)
 		exit(1);
 	} else {
 		
-		while(getline(line, len, fp)) {
+
+		printf("\nowlsh>");
+		while((nread = getline(&line, &len, fp))!= -1) {
 			const char delim[2] = " ";
 			char* token;
+			
+
 			//iterate through the tokens
-			token = strtok(*line, delim);
+			//token = strtok(line, delim);
 
 
 			// this just prints what was last typed in
-			printf("%s", *line);
+			printf("this is what was just inputted:%s\n", line);
 	
 			//built ins for exit, cd, and path
-			char exit_str[] = "exit"; 
+/*			char exit_str[] = "exit"; 
 			char *cd = "cd";
 			char* path = "path";
 
@@ -53,17 +71,18 @@ int main (int argc, char** argv)
 			if (strcmp(token, path) == 0) {
 				printf ("sick dude that says path\n");
 			}
-
+*/
 			//start with the other tokens
-			while (token != NULL) {
+			//while (token != NULL) {
 
 
-				token = strtok(NULL, delim);
-			}
+			//	token = strtok(NULL, delim);
+			//}
 
-			char *args[] = {"ls", "-l", NULL};
+			//char *args[] = {"ls", "-l", NULL};
 			// handle(args);
-
+			printf("we done here\n");
+			printf("\nowlsh>");
 		}
 	}
 	free(line);
