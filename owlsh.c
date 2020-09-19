@@ -31,24 +31,25 @@ int main (int argc, char** argv)
 		while((nread = getline(&line, &len, fp))!= -1) {
 			const char delim[2] = " ";
 			char* token;
-			
+			// this just prints what was last typed in
+			printf("this is what was just inputted:%s", line);
+	
 
 			//iterate through the tokens
-			//token = strtok(line, delim);
+			token = strtok(line, delim);
+			printf("this is the first token:%s!!", token);
 
-
-			// this just prints what was last typed in
-			printf("this is what was just inputted:%s\n", line);
-	
+			
 			//built ins for exit, cd, and path
-/*			char exit_str[] = "exit"; 
-			char *cd = "cd";
-			char* path = "path";
-
+			char exit_str[] = "exit\n"; 
 			if (strcmp(token, exit_str) == 0) {
 				printf ("sick dude that says exit\n");
 				exit(0);
 			}
+/*			char *cd = "cd";
+			char* path = "path";
+
+			
 
 			if (strcmp(token, cd) == 0) {
 				printf ("sick dude that says cd\n");
@@ -59,15 +60,15 @@ int main (int argc, char** argv)
 			}
 */
 			//start with the other tokens
-			//while (token != NULL) {
+			while (token != NULL) {
 
 
-			//	token = strtok(NULL, delim);
-			//}
+				token = strtok(NULL, delim);
+				printf("\nmoAR toKenS!!!:%s", token);
+			}
 
 			//char *args[] = {"ls", "-l", NULL};
 			// handle(args);
-			printf("we done here\n");
 			printf("\nowlsh>");
 		}
 	}
