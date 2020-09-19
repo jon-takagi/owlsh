@@ -2,14 +2,14 @@
 #include <unistd.h>
 #include <linux/limits.h>
 #include <stdlib.h>
-
+#include <string.h>
 
 int main (int argc, char** argv)
 {
 	char error_message[30] = "An error has occurred\n";
 	int BUFFER_SIZE = sysconf(ARG_MAX);
 	FILE *fp;
-	char line = (char*) malloc(BUFFER_SIZE);
+	char *line = (char*) malloc(BUFFER_SIZE);
 	size_t len = 0;
 	//if there be args, then assume it's a file and read from the first one
 	if (argc > 1) {
@@ -24,7 +24,7 @@ int main (int argc, char** argv)
 		free(line);
 		exit(1);
 	} else {
-		while(getline(&line, &len, fp)) {
+		while(getline(line, &len, fp)) {
 			printf("%s", line);
 			// handle input
 			// ariel do this
