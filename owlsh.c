@@ -6,26 +6,25 @@
 
 int main (int argc, char** argv)
 {
+	char error_message[30] = "An error has occurred\n";
 	int BUFFER_SIZE = sysconf(ARG_MAX);
 	FILE *fp;
-	char line[BUFFER_SIZE];
-	while(1) {
-		//if there be args, then do the batch mode
-		if (argc > 1) {
-			fp = fopen(argv[1], "r");
-		} else {
-			//else, it's interactive mode time
-			fp = stdin;
-		}
-		size_t len = 0;
-		char* read;
-		if(fp != NULL) {
-			printf("owlsh>");
-			read = fgets(line, len, fp);
-			if(feof(fp)) {
-				printf("EOF (CTRL + D) detecting, exiting\n");
-				return 0;
-			}
+	char line = (char*) malloc(BUFFER_SIZE);
+	size_t len = 0;
+	//if there be args, then assume it's a file and read from the first one
+	if (argc > 1) {
+		fp = fopen(argv[1], "r");
+	} else {
+		//else, it's interactive mode time
+		fp = stdin;
+	}
+	if(fp == NULL) {
+    	write(STDERR_FILENO, error_message, strlen(error_message));
+		fclose(fp);
+		free(line);
+		exit(1);
+	} else {
+		while(getline(&line, &len, fp)) {
 			printf("%s", line);
 	
 			//built ins for exit, cd, and path
@@ -43,12 +42,8 @@ int main (int argc, char** argv)
 
 
 			char *args[] = {"ls", "-l", NULL};
-			//handle(args);
+			// handle(args);
 
-		} else {
-			fprintf(stderr, "file could not be opened\n");
-			fclose(fp);
-			return 1;
 		}
 	}
 	free(line);
