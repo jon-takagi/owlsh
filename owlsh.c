@@ -88,21 +88,19 @@ int main (int argc, char** argv)
 							
 						}
 						else {
-							printf("ah your cd failed\n");
+							printf("that's not a directory :(\n");
 						}
 						if (DEBUG) printf("NEW directory is: %s\n", getcwd(s, 100));
 					}
 				}
-	/*			char* path = "path";
 
-				
+				//this crashes because there's no
+				char *path_str = "path";
 
-				
-
-				if (strcmp(token, path) == 0) {
+				if (token != NULL && strcmp(token, path_str) == 0) {
 					printf ("sick dude that says path\n");
 				}
-	*/
+	
 				//start with the other tokens
 				while (token != NULL) {
 
