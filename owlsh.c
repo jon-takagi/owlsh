@@ -28,8 +28,9 @@ int main (int argc, char** argv)
 		exit(1);
 	} else {
 		char* name_of_prompt = "owlsh>";
-		char **prompt = &name_of_prompt;
-		printf("%s",*prompt);
+		char *prompt = (char*) calloc(261, sizeof(char));
+		strcpy(prompt, name_of_prompt);
+		printf("%s",prompt);
 		while((nread = getline(&line, &len, fp))!= -1) {
 			const char delim[] = " \t\r\n\v\f";
 			char* token;
@@ -67,17 +68,22 @@ int main (int argc, char** argv)
 						int zeroForSuccess = chdir(token);
 						if (zeroForSuccess == 0)
 						{
-							printf("nice, your cd command worked\n");
+							if (DEBUG) printf("nice, your cd command worked\n");
 							// WE HAVE TO VALGRIND THIS: DEF A MEMORY LEAK HERE
 							//char new_prompt[260]; //that's the max path length for windows
-							char *new_prompt = (char*) calloc(261, sizeof(char));
+							char *old_prompt = (char*) calloc(261, sizeof(char));
+							strcpy(old_prompt, prompt);
 
-							strcpy(new_prompt, token);
-							strcat(new_prompt,"/ ");
-							strcat(new_prompt, *prompt);
+							//clearing prompt
+							memset (prompt, 0, sizeof(prompt));
 
-							printf( "new prompt is %s\n", new_prompt);
-							prompt = &new_prompt;
+							strcpy(prompt, token);
+							strcat(prompt,"/");
+							strcat(prompt, old_prompt);
+
+							free(old_prompt);
+							if (DEBUG) printf( "new prompt is %s\n", prompt);
+							
 
 							
 						}
@@ -107,7 +113,7 @@ int main (int argc, char** argv)
 			}
 			//char *args[] = {"ls", "-l", NULL};
 			// handle(args);
-			printf("%s",*prompt);
+			printf("%s",prompt);
 		}
 	}
 	free(line);
