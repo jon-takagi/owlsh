@@ -14,6 +14,9 @@ int main (int argc, char** argv)
 	char *line = NULL;
 	size_t len = 0;
 	ssize_t nread;
+	char *path_initially = " ";
+	char *PATH = (char*) calloc(400, sizeof(char));
+	strcpy(PATH, path_initially);
 	//if there be args, then assume it's a file and read from the first one
 	if (argc > 1) {
 		fp = fopen(argv[1], "r");
@@ -93,11 +96,26 @@ int main (int argc, char** argv)
 					}
 				}
 
-				//this crashes because there's no
+				
+
 				char *path_str = "path";
 
 				if (token != NULL && strcmp(token, path_str) == 0) {
-					printf ("sick dude that says path\n");
+					if (DEBUG) printf ("sick dude that says path\n");
+					token = strtok(NULL, delim);
+
+					if (token == NULL)
+					{
+						printf("%s\n",PATH);
+					}
+
+					while (token != NULL)
+					{
+						strcat(PATH, " ");
+						strcat(PATH, token);
+
+						token = strtok(NULL, delim);
+					}
 				}
 
 				//start with the other tokens
