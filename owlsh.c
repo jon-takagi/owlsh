@@ -42,7 +42,7 @@ int count_spaces_in_line(char *line) {
     int count = 0;
     int i = 0;
     for(; i < (strlen(line) / sizeof(char)); i++) {
-        if(line[i] == ' ' || line[i] == '\n') {
+        if(line[i] == ' ') {
             count += 1;
         }
     }
@@ -207,7 +207,6 @@ int main (int argc, char** argv)
 				freopen(trim(out), "w", stderr);
 			}
 			char **args = parse(cmd);
-			// printf("%d", count_spaces_in_line(cmd));
 			handle(count_spaces_in_line(cmd) + 1, args, PATH, prompt);
 			//printf("%s",prompt);
 			free(args);
