@@ -18,23 +18,24 @@ char* trim(char* line) {
 	int last  = strlen(line);
 	int i = 0;
 	for(; i < strlen(line); i++) {
-		if(isspace(line[i])) {
+		if(!isspace(line[i])) {
 			first = i;
             break;
 		}
 	}
-	i = strlen(line);
+	i = strlen(line) - 1;
 	for(; i >= 0; i--) {
 		if(!isspace(line[i])){
-			last = i;
+			last = i + 1;
             break;
 		}
 	}
-    char *str = malloc((last + 2) * sizeof(char));
-	memcpy(str, line+first, last + 1);
-    str[last + 2]='\0';
+    char *str = malloc((last) * sizeof(char));
+	memcpy(str, line+first, last);
+    str[last + 1]='\0';
 	return str;
 }
+
 // count spaces in line takes a char[] and uses strtok to count the spaces
 // only ' ' is counted
 int count_spaces_in_line(char *line) {
@@ -73,23 +74,23 @@ char** parse(char *line) {
 int handle(int argc, char **argv, char *PATH, char *prompt) {
 	int i = 0;
 	char* token;
-	printf("argc is %i",argc);
-
+	printf("argc is %i\n",argc);
 	if (argc = 0)
 	{
 		return -1;
 	}
 
 	//for(; i < argc + 1; i++) {
-		token = argv[0];
+		token = trim(argv[0]);
 
 		char exit_str[] = "exit";
+		char *cd = "cd"; // I want to try all the different ways of making strings
+		char *path_str = "path";
 		if (strcmp(token, exit_str) == 0) {
 			if (DEBUG) printf ("sick dude that says exit\n");
 			exit(0);
 		}
 
-		char *cd = "cd"; // I want to try all the different ways of making strings
 		if (strcmp(token, cd) == 0) {
 			if (DEBUG) printf ("sick dude that says cd\n");
 
@@ -122,9 +123,6 @@ int handle(int argc, char **argv, char *PATH, char *prompt) {
 
 					free(old_prompt);
 					if (DEBUG) printf( "new prompt is %s\n", prompt);
-
-
-
 				}
 				else {
 					printf("that's not a directory :(\n");
@@ -132,10 +130,6 @@ int handle(int argc, char **argv, char *PATH, char *prompt) {
 				if (DEBUG) printf("NEW directory is: %s\n", getcwd(s, 100));
 			}
 		}
-
-
-
-		char *path_str = "path";
 
 		if (strcmp(token, path_str) == 0) {
 			if (DEBUG) printf ("sick dude that says path\n");
@@ -154,9 +148,6 @@ int handle(int argc, char **argv, char *PATH, char *prompt) {
 		}
 
 		printf("%s\n", argv[i]);
-		// fprintf(stderr, "%s\n", argv[i]);
-		//printf("%s\n", argv[i]);
-		//fprintf(stderr, "%s\n", argv[i]);
 	//}
 }
 
@@ -204,7 +195,7 @@ int main (int argc, char** argv)
 				freopen(trim(out), "w", stderr);
 			}
 			char **args = parse(line);
-			handle(count_spaces_in_line(line), args, PATH, prompt);
+			handle(count_spaces_in_line(line) + 1, args, PATH, prompt);
 			//printf("%s",prompt);
 			free(args);
 			printf("%s",prompt);

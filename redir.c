@@ -16,18 +16,16 @@ char* trim(char* line) {
             break;
 		}
 	}
-	i = strlen(line);
+	i = strlen(line) - 1;
 	for(; i >= 0; i--) {
-        // printf("line[%d]: %c\n", i, line[i]);
 		if(!isspace(line[i])){
-			last = i;
+			last = i + 1;
             break;
 		}
 	}
-    char *str = malloc((last + 2) * sizeof(char));
-
-	memcpy(str, line+first, last + 1);
-    str[last + 2]='\0';
+    char *str = malloc((last) * sizeof(char));
+	memcpy(str, line+first, last);
+    str[last + 1]='\0';
 	return str;
 }
 
@@ -37,6 +35,7 @@ int main() {
     size_t len = 0;
     getline(&line, &len, stdin);
     line = trim(line);
+    printf("%d\n", line[5] == '\n');
     int i = 0;
     for(; i < strlen(line); i++) {
         printf("%c, %c\n", line[i], line1[i]);
