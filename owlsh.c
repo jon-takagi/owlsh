@@ -71,8 +71,7 @@ char** parse(char *line) {
     }
     return args;
 }
-int handle(int argc, char **argv, char *PATH, char *prompt, FILE *fp,
-	char *line) {
+int handle(int argc, char **argv, char *PATH, char *prompt) {
 	int i = 0;
 	char* token;
 
@@ -94,10 +93,6 @@ int handle(int argc, char **argv, char *PATH, char *prompt, FILE *fp,
 		char *path_str = "path";
 		if (strcmp(token, exit_str) == 0) {
 			if (DEBUG) printf ("sick dude that says exit\n");
-			free(prompt);
-			free(PATH);
-			free(line);
-			fclose(fp);
 			exit(0);
 		}
 
@@ -209,15 +204,15 @@ int main (int argc, char** argv)
 				freopen(trim(out), "w", stderr);
 			}
 			char **args = parse(cmd);
-			handle(count_spaces_in_line(line) + 1, args, PATH, prompt, fp, line);
+			handle(count_spaces_in_line(cmd) + 1, args, PATH, prompt);
 			//printf("%s",prompt);
 			free(args);
 			printf("%s",prompt);
 		}
 		free(prompt);
-		free(PATH);
 	}
 	free(line);
 	fclose(fp);
 	return 0;
 }
+
