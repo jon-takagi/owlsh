@@ -41,7 +41,9 @@ int main() {
     printf("there are %d spaces in the line\n", count_spaces_in_line(line));
     args = parse(line);
     printf("args has: %ld items\n", sizeof(args));
-    for(int i = 0; i < count_spaces_in_line(line) + 1; i++) {
+    int i = 0;
+    int args_len = 0;
+    for(; i < count_spaces_in_line(line) + 1; i++) {
         printf("%s\n", args[i]);
         free(args[i]);
     }

@@ -7,7 +7,32 @@
 #include <string.h>
 
 const int DEBUG = 1;
-
+// trim takes a string and returns the string without any whitespace on the ends
+// because its a return value, its on the heap, so it needs to be free'd
+char* trim(char* line) {
+	int first = 0;
+	int last  = strlen(line);
+	int i = 0;
+	for(; i < strlen(line); i++) {
+		if(!isspace(line[i])) {
+			first = i;
+            break;
+		}
+	}
+	i = strlen(line);
+	for(; i >= 0; i--) {
+		if(!isspace(line[i])){
+			last = i;
+            break;
+		}
+	}
+    char *str = malloc((last + 2) * sizeof(char));
+	memcpy(str, line+first, last + 1);
+    str[last + 2]='\0';
+	return str;
+}
+// count spaces in line takes a char[] and uses strtok to count the spaces
+// only ' ' is counted
 int count_spaces_in_line(char line[]) {
     int count = 0;
     int i = 0;
@@ -18,28 +43,34 @@ int count_spaces_in_line(char line[]) {
     }
     return count;
 }
+
+// parse breakes a line into an array for use with execvp
+// it uses count_spaces_in_line to malloc the right number of strings
+// strtok returns the next token, space is allocated and the token is copied onto the heap.
+
 char** parse(char *line) {
     char line_arr[strlen(line)];
     strcpy(line_arr, line);
     char *token, *reenterant;
     int spaces = count_spaces_in_line(line);
     // char *args[spaces];
-    char **args = (char **)malloc((spaces + 1) * 8);
+    char **args = (char **)malloc((spaces + 1) * sizeof(char));
     // Note that args[i][j] is same as *(*(args+i)+j)
     int i = 0;
     token = strtok_r(line_arr, " ", &reenterant);
     while(token != NULL) {
-        args[i] = (char*)malloc(strlen(line) * sizeof(char));
+        args[i] = (char*)malloc(strlen(token) * sizeof(char));
         strcpy(args[i], token);
-        i += 1;
         token = strtok_r(NULL, " ", &reenterant);
+        i += 1;
     }
     return args;
 }
-int handle(int argc, char **args) {
+int handle(int argc, char **argv) {
 	int i = 0;
 	for(; i < argc + 1; i++) {
-		printf("%s\n", args[i]);
+		printf("%s\n", argv[i]);
+		fprintf(stderr, "%s\n", argv[i]);
 	}
 }
 int main (int argc, char** argv)
@@ -63,33 +94,30 @@ int main (int argc, char** argv)
 		free(line);
 		exit(1);
 	} else {
-		char* name_of_prompt = "owlsh>";
+		char* name_of_prompt = "owlsh> ";
 		char *prompt = (char*) calloc(261, sizeof(char));
 		strcpy(prompt, name_of_prompt);
 		printf("%s",prompt);
 		while((nread = getline(&line, &len, fp)) != -1) {
+			char *cmd, *out;
+			cmd = strtok(line, ">");
+			out = strtok(NULL, ">");
+			if(out != NULL) {
+				// printf("%s", out);
+				strcpy(line, trim(cmd));
+				// freopen(out, "w", stdout);
+				freopen(trim(out), "w+", stderr);
+			}
+			fprintf(stderr, "testing");
 			char **args = parse(line);
+			// printf("got this far");
 			handle(count_spaces_in_line(line), args);
 			printf("%s",prompt);
 			free(args);
 		}
+		free(prompt);
 	}
 	free(line);
 	fclose(fp);
 	return 0;
-	//this is the size of the buffer when reading commands
-
-	//interactive mode time
-	// while (1)
-	// {
-	// 	printf("\nowlsh> ");
-	// 	//make a buffer (aka a c style array) that is big
-	// 	char buffer[BUFFER_SIZE * sizeof(char)];
-	//
-	//
-	//
-	// 	//source: https://c-for-dummies.com/blog/?p=1112
-	// 	ssize_t getline(buffer, BUFFER_SIZE, stdin);
-	//
-	// }
 }
