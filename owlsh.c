@@ -195,10 +195,10 @@ int main (int argc, char** argv)
 			if(out != NULL) {
 				// printf("%s", out);
 				strcpy(line, trim(cmd));
-				// freopen(out, "w", stdout);
+				freopen(trim(out), "w", stdout);
 				freopen(trim(out), "w", stderr);
 			}
-			char **args = parse(line);
+			char **args = parse(cmd);
 			handle(count_spaces_in_line(line) + 1, args, PATH, prompt);
 			//printf("%s",prompt);
 			free(args);
