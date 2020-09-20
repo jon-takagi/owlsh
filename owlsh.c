@@ -70,19 +70,13 @@ char** parse(char *line) {
 }
 int handle(int argc, char **argv) {
 	int i = 0;
-	
+
 	printf("argc is %i",argc);
 	for(; i < argc + 1; i++) {
-<<<<<<< HEAD
 		printf("%s\n", argv[i]);
 		// fprintf(stderr, "%s\n", argv[i]);
-=======
 		//printf("%s\n", argv[i]);
 		//fprintf(stderr, "%s\n", argv[i]);
-
-
-
->>>>>>> 63f4865f11b17dc2d1d95027c09a67fe430a73a9
 	}
 }
 int main (int argc, char** argv)
@@ -110,7 +104,6 @@ int main (int argc, char** argv)
 		char *prompt = (char*) calloc(261, sizeof(char));
 		strcpy(prompt, name_of_prompt);
 		printf("%s",prompt);
-<<<<<<< HEAD
 		while((nread = getline(&line, &len, fp)) != -1) {
 			char *cmd, *out;
 			cmd = strtok(line, ">");
@@ -121,19 +114,6 @@ int main (int argc, char** argv)
 				// freopen(out, "w", stdout);
 				freopen(trim(out), "w+", stderr);
 			}
-=======
-		while((nread = getline(&line, &len, fp)) != -1) {
-			char *cmd, *out;
-			cmd = strtok(line, ">");
-			out = strtok(NULL, ">");
-			if(out != NULL) {
-				// printf("%s", out);
-				strcpy(line, trim(cmd));
-				// freopen(out, "w", stdout);
-				freopen(trim(out), "w+", stderr);
-			}
-			//fprintf(stderr, "testing");
->>>>>>> 63f4865f11b17dc2d1d95027c09a67fe430a73a9
 			char **args = parse(line);
 			handle(count_spaces_in_line(line), args);
 			//printf("%s",prompt);
