@@ -77,13 +77,13 @@ int handle(int argc, char **argv, char *PATH, char *prompt) {
 
 	if(DEBUG) printf("number of args is %i\n", argc);
 
-	if (argc = 0)
+	if (argc == 0)
 	{
 		return -1;
 	}
 
 	//for(; i < argc + 1; i++) {
-		token = trim(argv[0]);
+		token = argv[0];
 
 		char exit_str[] = "exit";
 		char *cd = "cd"; // I want to try all the different ways of making strings
