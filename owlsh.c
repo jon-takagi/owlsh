@@ -8,7 +8,7 @@
 #include <ctype.h> // for isspace
 
 
-const int DEBUG = 0;
+const int DEBUG = 1;
 
 
 // trim takes a string and returns the string without any whitespace on the ends
@@ -42,7 +42,7 @@ int count_spaces_in_line(char *line) {
     int count = 0;
     int i = 0;
     for(; i < (strlen(line) / sizeof(char)); i++) {
-        if(line[i] == ' ') {
+        if(line[i] == ' ' || line[i] == '\n') {
             count += 1;
         }
     }
@@ -62,11 +62,11 @@ char** parse(char *line) {
     char **args = (char **)malloc((spaces + 1) * sizeof(char));
     // Note that args[i][j] is same as *(*(args+i)+j)
     int i = 0;
-    token = strtok_r(line_arr, " ", &reenterant);
+    token = strtok_r(line_arr, " \n", &reenterant);
     while(token != NULL) {
         args[i] = (char*)malloc(strlen(token) * sizeof(char));
         strcpy(args[i], token);
-        token = strtok_r(NULL, " ", &reenterant);
+        token = strtok_r(NULL, " \n", &reenterant);
         i += 1;
     }
     return args;
@@ -74,7 +74,9 @@ char** parse(char *line) {
 int handle(int argc, char **argv, char *PATH, char *prompt) {
 	int i = 0;
 	char* token;
-	printf("argc is %i\n",argc);
+
+	if(DEBUG) printf("number of args is %i\n", argc);
+
 	if (argc = 0)
 	{
 		return -1;
@@ -98,10 +100,12 @@ int handle(int argc, char **argv, char *PATH, char *prompt) {
 
 			//first, make sure the next token exists
 			//token = strtok(NULL, delim);
-			if (argc > 1) {
-				token = argv[1];
+			if (argc <= 1) {
+				printf("u need to put something after the cd\n");
+
 			}
 			else {
+				token = argv[1];
 				char s[100];
 				if (DEBUG) printf("current directory is: %s\n", getcwd(s, 100));
 				if (DEBUG) printf("current token is: ~<3%s\n~<3", token);
