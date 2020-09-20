@@ -1,11 +1,47 @@
+#define  _GNU_SOURCE
 #include <stdio.h>
 #include <unistd.h>
 #include <linux/limits.h>
+#include <limits.h>
 #include <stdlib.h>
 #include <string.h>
 
-const int DEBUG = 0;
+const int DEBUG = 1;
 
+int count_spaces_in_line(char line[]) {
+    int count = 0;
+    int i = 0;
+    for(; i < sizeof(line) / sizeof(char); i++) {
+        if(line[i] == ' ') {
+            count += 1;
+        }
+    }
+    return count;
+}
+char** parse(char *line) {
+    char line_arr[strlen(line)];
+    strcpy(line_arr, line);
+    char *token, *reenterant;
+    int spaces = count_spaces_in_line(line);
+    // char *args[spaces];
+    char **args = (char **)malloc((spaces + 1) * 8);
+    // Note that args[i][j] is same as *(*(args+i)+j)
+    int i = 0;
+    token = strtok_r(line_arr, " ", &reenterant);
+    while(token != NULL) {
+        args[i] = (char*)malloc(strlen(line) * sizeof(char));
+        strcpy(args[i], token);
+        i += 1;
+        token = strtok_r(NULL, " ", &reenterant);
+    }
+    return args;
+}
+int handle(int argc, char **args) {
+	int i = 0;
+	for(; i < argc + 1; i++) {
+		printf("%s\n", args[i]);
+	}
+}
 int main (int argc, char** argv)
 {
 	char error_message[30] = "An error has occurred\n";
@@ -31,86 +67,11 @@ int main (int argc, char** argv)
 		char *prompt = (char*) calloc(261, sizeof(char));
 		strcpy(prompt, name_of_prompt);
 		printf("%s",prompt);
-		while((nread = getline(&line, &len, fp))!= -1) {
-			const char delim[] = " \t\r\n\v\f";
-			char* token;
-			// this just prints what was last typed in
-			if (DEBUG) printf("this is what was just inputted:%s", line);
-
-			//iterate through the tokens
-			token = strtok(line, delim);
-			if (token != NULL)
-			{
-				if (DEBUG) printf("this is the first token:%s!!", token);
-
-
-				//built ins for exit, cd, and path
-				char exit_str[] = "exit";
-				if (strcmp(token, exit_str) == 0) {
-					if (DEBUG) printf ("sick dude that says exit\n");
-					exit(0);
-				}
-
-				char *cd = "cd"; // I want to try all the different ways of making strings
-				if (strcmp(token, cd) == 0) {
-					if (DEBUG) printf ("sick dude that says cd\n");
-
-					//execute chdir with the next token
-
-					//first, make sure the next token exists
-					token = strtok(NULL, delim);
-					if (token == NULL) { printf("bruh u gotta put something after the cd\n"); }
-					else {
-						char s[100];
-						if (DEBUG) printf("current directory is: %s\n", getcwd(s, 100));
-						if (DEBUG) printf("current token is: ~<3%s\n~<3", token);
-						int zeroForSuccess = chdir(token);
-						if (zeroForSuccess == 0)
-						{
-							if (DEBUG) printf("nice, your cd command worked\n");
-							// WE HAVE TO VALGRIND THIS: DEF A MEMORY LEAK HERE
-							//char new_prompt[260]; //that's the max path length for windows
-							char *old_prompt = (char*) calloc(261, sizeof(char));
-							strcpy(old_prompt, prompt);
-
-							//clearing prompt
-							memset (prompt, 0, sizeof(prompt));
-
-							strcpy(prompt, token);
-							strcat(prompt,"/");
-							strcat(prompt, old_prompt);
-
-							free(old_prompt);
-							if (DEBUG) printf( "new prompt is %s\n", prompt);
-
-
-
-						}
-						else {
-							printf("that's not a directory :(\n");
-						}
-						if (DEBUG) printf("NEW directory is: %s\n", getcwd(s, 100));
-					}
-				}
-
-				//this crashes because there's no
-				char *path_str = "path";
-
-				if (token != NULL && strcmp(token, path_str) == 0) {
-					printf ("sick dude that says path\n");
-				}
-
-				//start with the other tokens
-				while (token != NULL) {
-
-
-					token = strtok(NULL, delim);
-					if (DEBUG) printf("\nmoAR toKenS!!!:%s", token);
-				}
-			}
-			//char *args[] = {"ls", "-l", NULL};
-			// handle(args);
+		while((nread = getline(&line, &len, fp)) != -1) {
+			char **args = parse(line);
+			handle(count_spaces_in_line(line), args);
 			printf("%s",prompt);
+			free(args);
 		}
 	}
 	free(line);
