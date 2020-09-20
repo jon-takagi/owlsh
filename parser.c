@@ -9,7 +9,7 @@
 int count_spaces_in_line(char line[]) {
     int count = 0;
     int i = 0;
-    for(; i < sizeof(line) / sizeof(char); i++) {
+    for(; i < strlen(line) / sizeof(char); i++) {
         if(line[i] == ' ') {
             count += 1;
         }
@@ -37,10 +37,9 @@ char** parse(char *line) {
 
 int main() {
     char *line, **args;
-    line = "ls -l ~/docs";
-    printf("there are %d spaces in the line\n", count_spaces_in_line(line));
+    line = "path /bin /butt";
     args = parse(line);
-    printf("args has: %ld items\n", sizeof(args));
+    printf("args has: %d items\n", count_spaces_in_line(line) + 1);
     int i = 0;
     int args_len = 0;
     for(; i < count_spaces_in_line(line) + 1; i++) {

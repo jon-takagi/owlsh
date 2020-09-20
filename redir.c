@@ -24,23 +24,26 @@ char* trim(char* line) {
             break;
 		}
 	}
-    printf("first non space: %d\n", first);
-    printf("last non space: %d\n", last);
-    // char *str = ":(";
-    // char *str = malloc((last - first) * sizeof(char));
     char *str = malloc((last + 2) * sizeof(char));
 
 	memcpy(str, line+first, last + 1);
     str[last + 2]='\0';
-    printf("%s\n", str);
 	return str;
 }
 
 int main() {
-    char *line = "hello";
-    trim(line);
-    // freopen("hello.txt", "w", stdout);
-    // char *args[] = {"ls", "-l", NULL};
-    // execvp(args[0], args);
+    char *line1 = "hello";
+    char *line;
+    size_t len = 0;
+    getline(&line, &len, stdin);
+    line = trim(line);
+    int i = 0;
+    for(; i < strlen(line); i++) {
+        printf("%c, %c\n", line[i], line1[i]);
+    }
+    // printf("%d", strcmp(trim(line), line1));
+    freopen(line, "w+", stdout);
+    char *args[] = {"ls", "-l", NULL};
+    execvp(args[0], args);
     return 0;
 }

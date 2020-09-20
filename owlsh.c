@@ -153,8 +153,6 @@ int handle(int argc, char **argv, char *PATH, char *prompt) {
 
 		}
 
-
-
 		printf("%s\n", argv[i]);
 		// fprintf(stderr, "%s\n", argv[i]);
 		//printf("%s\n", argv[i]);
@@ -203,7 +201,7 @@ int main (int argc, char** argv)
 				// printf("%s", out);
 				strcpy(line, trim(cmd));
 				// freopen(out, "w", stdout);
-				freopen(trim(out), "w+", stderr);
+				freopen(trim(out), "w", stderr);
 			}
 			char **args = parse(line);
 			handle(count_spaces_in_line(line), args, PATH, prompt);
