@@ -38,7 +38,7 @@ char* trim(char* line) {
 int count_spaces_in_line(char *line) {
     int count = 0;
     int i = 0;
-    for(; i < (sizeof(line) / sizeof(char)); i++) {
+    for(; i < (strlen(line) / sizeof(char)); i++) {
         if(line[i] == ' ') {
             count += 1;
         }
@@ -68,17 +68,18 @@ char** parse(char *line) {
     }
     return args;
 }
-int handle(int argc, char **argv) {
-	int i = 0;
 
-	printf("argc is %i",argc);
-	for(; i < argc + 1; i++) {
+int handle(int argc, char **argv) {
+	printf("argc: %d\n", argc);
+	int i = 0;
+	for(; i < argc; i++) {
 		printf("%s\n", argv[i]);
 		// fprintf(stderr, "%s\n", argv[i]);
 		//printf("%s\n", argv[i]);
 		//fprintf(stderr, "%s\n", argv[i]);
 	}
 }
+
 int main (int argc, char** argv)
 {
 	char error_message[30] = "An error has occurred\n";
@@ -111,13 +112,14 @@ int main (int argc, char** argv)
 			if(out != NULL) {
 				// printf("%s", out);
 				strcpy(line, trim(cmd));
-				// freopen(out, "w", stdout);
+				freopen(trim(out), "w+", stdout);
 				freopen(trim(out), "w+", stderr);
 			}
 			char **args = parse(line);
-			handle(count_spaces_in_line(line), args);
+			handle(count_spaces_in_line(line) + 1, args);
 			//printf("%s",prompt);
 			free(args);
+			printf("%s",prompt);
 		}
 		free(prompt);
 	}
