@@ -5,6 +5,8 @@
 #include <limits.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h> // for isspace
+
 
 const int DEBUG = 1;
 // trim takes a string and returns the string without any whitespace on the ends
@@ -14,7 +16,7 @@ char* trim(char* line) {
 	int last  = strlen(line);
 	int i = 0;
 	for(; i < strlen(line); i++) {
-		if(!isspace(line[i])) {
+		if(isspace(line[i])) {
 			first = i;
             break;
 		}
@@ -33,10 +35,10 @@ char* trim(char* line) {
 }
 // count spaces in line takes a char[] and uses strtok to count the spaces
 // only ' ' is counted
-int count_spaces_in_line(char line[]) {
+int count_spaces_in_line(char *line) {
     int count = 0;
     int i = 0;
-    for(; i < sizeof(line) / sizeof(char); i++) {
+    for(; i < (sizeof(line) / sizeof(char)); i++) {
         if(line[i] == ' ') {
             count += 1;
         }
@@ -68,9 +70,14 @@ char** parse(char *line) {
 }
 int handle(int argc, char **argv) {
 	int i = 0;
+	
+	printf("argc is %i",argc);
 	for(; i < argc + 1; i++) {
-		printf("%s\n", argv[i]);
-		fprintf(stderr, "%s\n", argv[i]);
+		//printf("%s\n", argv[i]);
+		//fprintf(stderr, "%s\n", argv[i]);
+
+
+
 	}
 }
 int main (int argc, char** argv)
@@ -108,11 +115,11 @@ int main (int argc, char** argv)
 				// freopen(out, "w", stdout);
 				freopen(trim(out), "w+", stderr);
 			}
-			fprintf(stderr, "testing");
+			//fprintf(stderr, "testing");
 			char **args = parse(line);
 			// printf("got this far");
 			handle(count_spaces_in_line(line), args);
-			printf("%s",prompt);
+			//printf("%s",prompt);
 			free(args);
 		}
 		free(prompt);
