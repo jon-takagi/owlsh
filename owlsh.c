@@ -77,12 +77,14 @@ int handle(int argc, char **argv, char *PATH, char *prompt) {
 
 	if(DEBUG) printf("number of args is %i\n", argc);
 
-	if (argc = 0)
+	if (argc == 0)
 	{
 		return -1;
 	}
 
-	//for(; i < argc + 1; i++) {
+	for(; i < argc; i++) {
+		printf("%s\n", argv[i]);
+	}
 		token = trim(argv[0]);
 
 		char exit_str[] = "exit";
@@ -203,7 +205,8 @@ int main (int argc, char** argv)
 				freopen(trim(out), "w", stderr);
 			}
 			char **args = parse(cmd);
-			handle(count_spaces_in_line(line) + 1, args, PATH, prompt);
+			printf("%d", count_spaces_in_line(cmd));
+			handle(count_spaces_in_line(cmd) + 1, args, PATH, prompt);
 			//printf("%s",prompt);
 			free(args);
 			printf("%s",prompt);
