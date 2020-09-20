@@ -70,7 +70,7 @@ int handle(int argc, char **argv) {
 	int i = 0;
 	for(; i < argc + 1; i++) {
 		printf("%s\n", argv[i]);
-		fprintf(stderr, "%s\n", argv[i]);
+		// fprintf(stderr, "%s\n", argv[i]);
 	}
 }
 int main (int argc, char** argv)
@@ -108,9 +108,7 @@ int main (int argc, char** argv)
 				// freopen(out, "w", stdout);
 				freopen(trim(out), "w+", stderr);
 			}
-			fprintf(stderr, "testing");
 			char **args = parse(line);
-			// printf("got this far");
 			handle(count_spaces_in_line(line), args);
 			printf("%s",prompt);
 			free(args);
