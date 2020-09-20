@@ -140,12 +140,14 @@ int handle(int argc, char **argv, char *PATH, char *prompt) {
 		if (strcmp(token, path_str) == 0) {
 			if (DEBUG) printf ("sick dude that says path\n");
 
-			if (argc == 1) {
+			if (argc == 1+1) {
 				printf("%s\n",PATH);
 			}
 			else {
 				int i = 1;
-				for(; i < argc; i++){
+				for(; i < argc -1; i++){
+					token = argv[i];
+					if (DEBUG) printf("token is '%s'\n", token);
 					strcat(PATH, " ");
 					strcat(PATH, token);
 				}
@@ -205,7 +207,7 @@ int main (int argc, char** argv)
 				freopen(trim(out), "w", stderr);
 			}
 			char **args = parse(cmd);
-			printf("%d", count_spaces_in_line(cmd));
+			// printf("%d", count_spaces_in_line(cmd));
 			handle(count_spaces_in_line(cmd) + 1, args, PATH, prompt);
 			//printf("%s",prompt);
 			free(args);
