@@ -151,7 +151,11 @@ int handle(int argc, char **argv, char *PATH, char *prompt) {
 
 		}
 
-		printf("%s\n", argv[i]);
+		//printf("%s\n", argv[i]);
+		// fprintf(stderr, "%s\n", argv[i]);
+		//printf("%s\n", argv[i]);
+		//fprintf(stderr, "%s\n", argv[i]);
+
 	//}
 }
 
