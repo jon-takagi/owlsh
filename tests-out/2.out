@@ -1,0 +1,29 @@
+wish> token: cd /bad1 /bad2
+
+now in child, handling: cd /bad1 /bad2
+
+cmd: cd
+number of args is 3
+cd
+/bad1
+/bad2
+entering builtin: cd
+current directory: /reed.edu/home/j/o/jontakagi/os/shell
+changing to: /bad1
+wish> token: cd /bad1 /bad2
+
+exit code: 0
+wish> token: exit
+
+now in child, handling: exit
+
+cmd: exit
+number of args is 1
+exit
+entering builtin: exit
+wish> token: cd /bad1 /bad2
+
+exit code: 0
+wish> token: exit
+
+exit code: 69
