@@ -77,27 +77,24 @@ int handle(int argc, char **argv, char *PATH, char *prompt) {
 
 	if(DEBUG) printf("number of args is %i\n", argc);
 
-	if (argc == 0)
-	{
+	if (argc == 0){
 		return -1;
 	}
 
 	for(; i < argc; i++) {
 		printf("%s\n", argv[i]);
 	}
-	token = trim(argv[0]);
 
+	token = trim(argv[0]);
 	char exit_str[] = "exit";
 	char *cd = "cd"; // I want to try all the different ways of making strings
 	char *path_str = "path";
 	if (strcmp(token, exit_str) == 0) {
 		if (DEBUG) printf ("sick dude that says exit\n");
-		free(PATH);
-		free(prompt);
 		exit(0);
 	}
 
-	else if (strcmp(token, cd) == 0) {
+	if (strcmp(token, cd) == 0) {
 		if (DEBUG) printf ("sick dude that says cd\n");
 
 		//execute chdir with the next token
@@ -141,28 +138,20 @@ int handle(int argc, char **argv, char *PATH, char *prompt) {
 
 	if (strcmp(token, path_str) == 0) {
 		if (DEBUG) printf ("sick dude that says path\n");
-
-		if (argc == 1) {
-			printf("%s\n",PATH);
-		}
-		else {
-			int i = 1;
-			for(; i < argc; i++){
-				token = argv[i];
-				if (DEBUG) printf("token is '%s'\n", token);
-				strcat(PATH, " ");
-				strcat(PATH, token);
+			if (argc == 1) {
+				printf("%s\n",PATH);
+			} else {
+				int i = 1;
+				for(; i < argc; i++){
+					token = argv[i];
+					if (DEBUG) printf("token is '%s'\n", token);
+					strcat(PATH, " ");
+					strcat(PATH, token);
+				}
 			}
 		}
 
-	}
-
-		//printf("%s\n", argv[i]);
-		// fprintf(stderr, "%s\n", argv[i]);
-		//printf("%s\n", argv[i]);
-		//fprintf(stderr, "%s\n", argv[i]);
-
-	//}
+	execvp(argv[0], argv);
 }
 
 int main (int argc, char** argv)
@@ -175,8 +164,6 @@ int main (int argc, char** argv)
 	char* name_of_prompt = "owlsh> ";
 	char *prompt = (char*) calloc(261, sizeof(char));
 	strcpy(prompt, name_of_prompt);
-
-
 
 	char error_message[30] = "An error has occurred\n";
 	int BUFFER_SIZE = sysconf(ARG_MAX);
@@ -199,20 +186,26 @@ int main (int argc, char** argv)
 	} else {
 		printf("%s",prompt);
 		while((nread = getline(&line, &len, fp)) != -1) {
-			char *cmd, *out;
-			cmd = strtok(line, ">");
-			out = strtok(NULL, ">");
-			if(out != NULL) {
-				// printf("%s", out);
-				strcpy(line, trim(cmd));
-				freopen(trim(out), "w", stdout);
-				freopen(trim(out), "w", stderr);
+			char *token = strtok(line, "&");
+			while (token != NULL) {
+				int pid = fork();
+				if(pid == 0) {
+					char *cmd, *out;
+					cmd = strtok(line, ">");
+					out = strtok(NULL, ">");
+					if(out != NULL) {
+						// printf("%s", out);
+						strcpy(line, trim(cmd));
+						freopen(trim(out), "w", stdout);
+						freopen(trim(out), "w", stderr);
+					}
+					char **args = parse(line);
+					handle(count_spaces_in_line(line) + 1, args, PATH, prompt);
+					free(args);
+					printf("%s",prompt);
+				}
+				token = strtok(NULL, "&");
 			}
-			char **args = parse(cmd);
-			handle(count_spaces_in_line(cmd) + 1, args, PATH, prompt);
-			//printf("%s",prompt);
-			free(args);
-			printf("%s",prompt);
 		}
 		free(prompt);
 	}
