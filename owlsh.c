@@ -86,60 +86,49 @@ int handle(int argc, char **argv, char *PATH, char *prompt) {
 
 	if (argc == 0){
 		return -1;
-
 	}
 
 	token = trim(argv[0]);
 
 	if (strcmp(token, "exit") == 0) {
-		if (DEBUG) printf ("sick dude that says exit\n");
+		if (DEBUG) printf ("entering builtin: exit\n");
 		exit(69);
 	}
 
 	if (strcmp(token, "cd") == 0) {
-		if (DEBUG) printf ("sick dude that says cd\n");
+		if (DEBUG) printf ("entering builtin: cd\n");
 
 		//execute chdir with the next token
 
 		//first, make sure the next token exists
 		//token = strtok(NULL, delim);
-		if (argc <= 1) {
-			printf("u need to put something after the cd\n");
 
+		token = argv[1];
+		char s[100];
+		if (DEBUG) printf("current directory: %s\n", getcwd(s, 100));
+		if (DEBUG) printf("changing to: %s\n", token);
+		if (chdir(token) == 0)
+		{
+			if (DEBUG) printf("nice, your cd command worked\n");
+			// WE HAVE TO VALGRIND THIS: DEF A MEMORY LEAK HERE
+			//char new_prompt[260]; //that's the max path length for windows
+			char *old_prompt = (char*) calloc(261, sizeof(char));
+			strcpy(old_prompt, prompt);
+
+			//clearing prompt
+			memset (prompt, 0, sizeof(prompt));	
+			strcpy(prompt, token);
+			strcat(prompt,"/");
+			strcat(prompt, old_prompt);
+
+			free(old_prompt);
+			if (DEBUG) printf( "new prompt is %s\n", prompt);
 		}
-		else {
-			token = argv[1];
-			char s[100];
-			if (DEBUG) printf("current directory is: %s\n", getcwd(s, 100));
-			if (DEBUG) printf("current token is: ~<3%s\n~<3", token);
-			int zeroForSuccess = chdir(token);
-			if (zeroForSuccess == 0)
-			{
-				if (DEBUG) printf("nice, your cd command worked\n");
-				// WE HAVE TO VALGRIND THIS: DEF A MEMORY LEAK HERE
-				//char new_prompt[260]; //that's the max path length for windows
-				char *old_prompt = (char*) calloc(261, sizeof(char));
-				strcpy(old_prompt, prompt);
-
-				//clearing prompt
-				memset (prompt, 0, sizeof(prompt));
-
-				strcpy(prompt, token);
-				strcat(prompt,"/");
-				strcat(prompt, old_prompt);
-
-				free(old_prompt);
-				if (DEBUG) printf( "new prompt is %s\n", prompt);
-			}
-			else {
-				printf("that's not a directory :(\n");
-			}
-			if (DEBUG) printf("NEW directory is: %s\n", getcwd(s, 100));
-		}
+		if (DEBUG) printf("NEW directory is: %s\n", getcwd(s, 100));
 	}
 
 	if (strcmp(token, "path") == 0) {
-		if (DEBUG) printf ("sick dude that says path\n");
+		if (DEBUG) printf ("entering builtin: path\n");
 			if (argc == 1) {
 				printf("%s\n",PATH);
 			} else {
@@ -174,7 +163,9 @@ int main (int argc, char** argv)
 	size_t len = 0;
 	ssize_t nread;
 	//if there be args, then assume it's a file and read from the first one
-	if (argc > 1) {
+	if (argc > 2) {
+		write(STDERR_FILENO, error_message, strlen(error_message));
+	} else if (argc == 2) {
 		fp = fopen(argv[1], "r");
 	} else {
 		//else, it's interactive mode time
@@ -195,10 +186,10 @@ int main (int argc, char** argv)
 			int rcs[pidc];
 			char *token = strtok(line, "&");
 			while (token != NULL) {
-				printf("token: %s\n", token);
+				if(DEBUG) printf("token: %s\n", token);
 				pid = fork();
 				if(pid == 0) {
-					printf("now in child, handling: %s\n", token);
+					if(DEBUG) printf("now in child, handling: %s\n", token);
 					char *cmd, *out;
 					cmd = strtok(token, ">");
 					out = strtok(NULL, ">");
@@ -207,7 +198,7 @@ int main (int argc, char** argv)
 						freopen(trim(out), "w", stderr);
 					}
 					char **args = parse(trim(cmd));
-					printf("cmd: %s\n", args[0]);
+					if(DEBUG) printf("cmd: %s\n", args[0]);
 					handle(count_char_in_line(trim(token), ' ') + 1, args, PATH, prompt);
 					free(args);
 					exit(1);
@@ -223,13 +214,12 @@ int main (int argc, char** argv)
 			}
 			for(i = 0; i < pidc; i++) {
 				if(WIFEXITED(rcs[i])) {
-					printf("exit code: %d\n", WEXITSTATUS(rcs[i]));
+					if(DEBUG) printf("exit code: %d\n", WEXITSTATUS(rcs[i]));
 					if(WEXITSTATUS(rcs[i]) == 69) {
 						exit(0);
 					}
 				}
 			}
-
 			printf("%s",prompt);
 		}
 	}
