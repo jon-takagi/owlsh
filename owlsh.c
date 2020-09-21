@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h> // for isspace
+#include <sys/wait.h>
 
 
 const int DEBUG = 1;
@@ -88,9 +89,6 @@ int handle(int argc, char **argv, char *PATH, char *prompt) {
 	}
 
 	token = trim(argv[0]);
-	char exit_str[] = "exit";
-	char *cd = "cd"; // I want to try all the different ways of making strings
-	char *path_str = "path";
 
 	if (strcmp(token, "exit") == 0) {
 		if (DEBUG) printf ("sick dude that says exit\n");
@@ -98,7 +96,7 @@ int handle(int argc, char **argv, char *PATH, char *prompt) {
 		return 1;
 	}
 
-	if (strcmp(token, cd) == 0) {
+	if (strcmp(token, "cd") == 0) {
 		if (DEBUG) printf ("sick dude that says cd\n");
 
 		//execute chdir with the next token
@@ -140,7 +138,7 @@ int handle(int argc, char **argv, char *PATH, char *prompt) {
 		}
 	}
 
-	if (strcmp(token, path_str) == 0) {
+	if (strcmp(token, "path") == 0) {
 		if (DEBUG) printf ("sick dude that says path\n");
 			if (argc == 1) {
 				printf("%s\n",PATH);
@@ -191,7 +189,6 @@ int main (int argc, char** argv)
 		printf("%s",prompt);
 		int pid;
 		while((nread = getline(&line, &len, fp)) != -1) {
-			printf("%s",prompt);
 			char *token = strtok(line, "&");
 			while (token != NULL) {
 				pid = fork();
@@ -209,6 +206,7 @@ int main (int argc, char** argv)
 					printf("cmd: %s\n", args[0]);
 					handle(count_spaces_in_line(line) + 1, args, PATH, prompt);
 					free(args);
+					exit(1);
 				}
 				token = strtok(NULL, "&");
 			}
@@ -219,9 +217,10 @@ int main (int argc, char** argv)
 				int exit_code = WEXITSTATUS(rc);
 				printf("exit code was: %d\n", exit_code);
 				if(exit_code == 1) {
-					return 0;
+					exit(0);
 				}
 			}
+			printf("%s",prompt);
 		}
 	}
 	free(prompt);
