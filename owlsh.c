@@ -38,12 +38,12 @@ char* trim(char* line) {
 }
 
 // count spaces in line takes a char[] and uses strtok to count the spaces
-// only ' ' is counted
-int count_spaces_in_line(char *line) {
+// second arg, izard, is the type of whosamawhatsit u wanna count
+int count_char_in_line(char *line, char izard ) {
     int count = 0;
     int i = 0;
     for(; i < (strlen(line) / sizeof(char)); i++) {
-        if(line[i] == ' ') {
+        if(line[i] == izard) {
             count += 1;
         }
     }
@@ -51,14 +51,14 @@ int count_spaces_in_line(char *line) {
 }
 
 // parse breakes a line into an array for use with execvp
-// it uses count_spaces_in_line to malloc the right number of strings
+// it uses count_char_in_line to malloc the right number of strings
 // strtok returns the next token, space is allocated and the token is copied onto the heap.
 
 char** parse(char *line) {
     char line_arr[strlen(line)];
     strcpy(line_arr, line);
     char *token, *reenterant;
-    int spaces = count_spaces_in_line(line);
+    int spaces = count_char_in_line(line, ' ');
     // char *args[spaces];
     char **args = (char **)malloc((spaces + 1) * sizeof(char));
     // Note that args[i][j] is same as *(*(args+i)+j)
@@ -204,7 +204,7 @@ int main (int argc, char** argv)
 					}
 					char **args = parse(trim(cmd));
 					printf("cmd: %s\n", args[0]);
-					handle(count_spaces_in_line(trim(token)) + 1, args, PATH, prompt);
+					handle(count_char_in_line(trim(token), ' ') + 1, args, PATH, prompt);
 					free(args);
 					exit(1);
 				}
