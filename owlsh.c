@@ -85,77 +85,77 @@ int handle(int argc, char **argv, char *PATH, char *prompt) {
 	for(; i < argc; i++) {
 		printf("%s\n", argv[i]);
 	}
-		token = trim(argv[0]);
+	token = trim(argv[0]);
 
-		char exit_str[] = "exit";
-		char *cd = "cd"; // I want to try all the different ways of making strings
-		char *path_str = "path";
-		if (strcmp(token, exit_str) == 0) {
-			if (DEBUG) printf ("sick dude that says exit\n");
-			free(PATH);
-			free(prompt);
-			exit(0);
+	char exit_str[] = "exit";
+	char *cd = "cd"; // I want to try all the different ways of making strings
+	char *path_str = "path";
+	if (strcmp(token, exit_str) == 0) {
+		if (DEBUG) printf ("sick dude that says exit\n");
+		free(PATH);
+		free(prompt);
+		exit(0);
+	}
+
+	else if (strcmp(token, cd) == 0) {
+		if (DEBUG) printf ("sick dude that says cd\n");
+
+		//execute chdir with the next token
+
+		//first, make sure the next token exists
+		//token = strtok(NULL, delim);
+		if (argc <= 1) {
+			printf("u need to put something after the cd\n");
+
 		}
+		else {
+			token = argv[1];
+			char s[100];
+			if (DEBUG) printf("current directory is: %s\n", getcwd(s, 100));
+			if (DEBUG) printf("current token is: ~<3%s\n~<3", token);
+			int zeroForSuccess = chdir(token);
+			if (zeroForSuccess == 0)
+			{
+				if (DEBUG) printf("nice, your cd command worked\n");
+				// WE HAVE TO VALGRIND THIS: DEF A MEMORY LEAK HERE
+				//char new_prompt[260]; //that's the max path length for windows
+				char *old_prompt = (char*) calloc(261, sizeof(char));
+				strcpy(old_prompt, prompt);
 
-		if (strcmp(token, cd) == 0) {
-			if (DEBUG) printf ("sick dude that says cd\n");
+				//clearing prompt
+				memset (prompt, 0, sizeof(prompt));
 
-			//execute chdir with the next token
+				strcpy(prompt, token);
+				strcat(prompt,"/");
+				strcat(prompt, old_prompt);
 
-			//first, make sure the next token exists
-			//token = strtok(NULL, delim);
-			if (argc <= 1) {
-				printf("u need to put something after the cd\n");
-
+				free(old_prompt);
+				if (DEBUG) printf( "new prompt is %s\n", prompt);
 			}
 			else {
-				token = argv[1];
-				char s[100];
-				if (DEBUG) printf("current directory is: %s\n", getcwd(s, 100));
-				if (DEBUG) printf("current token is: ~<3%s\n~<3", token);
-				int zeroForSuccess = chdir(token);
-				if (zeroForSuccess == 0)
-				{
-					if (DEBUG) printf("nice, your cd command worked\n");
-					// WE HAVE TO VALGRIND THIS: DEF A MEMORY LEAK HERE
-					//char new_prompt[260]; //that's the max path length for windows
-					char *old_prompt = (char*) calloc(261, sizeof(char));
-					strcpy(old_prompt, prompt);
+				printf("that's not a directory :(\n");
+			}
+			if (DEBUG) printf("NEW directory is: %s\n", getcwd(s, 100));
+		}
+	}
 
-					//clearing prompt
-					memset (prompt, 0, sizeof(prompt));
+	if (strcmp(token, path_str) == 0) {
+		if (DEBUG) printf ("sick dude that says path\n");
 
-					strcpy(prompt, token);
-					strcat(prompt,"/");
-					strcat(prompt, old_prompt);
-
-					free(old_prompt);
-					if (DEBUG) printf( "new prompt is %s\n", prompt);
-				}
-				else {
-					printf("that's not a directory :(\n");
-				}
-				if (DEBUG) printf("NEW directory is: %s\n", getcwd(s, 100));
+		if (argc == 1) {
+			printf("%s\n",PATH);
+		}
+		else {
+			int i = 1;
+			for(; i < argc; i++){
+				token = argv[i];
+				if (DEBUG) printf("token is '%s'\n", token);
+				strcat(PATH, " ");
+				strcat(PATH, token);
 			}
 		}
 
-		if (strcmp(token, path_str) == 0) {
-			if (DEBUG) printf ("sick dude that says path\n");
-
-			if (argc == 1) {
-				printf("%s\n",PATH);
-			}
-			else {
-				int i = 1;
-				for(; i < argc; i++){
-					token = argv[i];
-					if (DEBUG) printf("token is '%s'\n", token);
-					strcat(PATH, " ");
-					strcat(PATH, token);
-				}
-			}
-
-		}
+	}
 
 		//printf("%s\n", argv[i]);
 		// fprintf(stderr, "%s\n", argv[i]);
