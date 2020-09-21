@@ -93,8 +93,7 @@ int handle(int argc, char **argv, char *PATH, char *prompt) {
 
 	if (strcmp(token, "exit") == 0) {
 		if (DEBUG) printf ("sick dude that says exit\n");
-		exit(1);
-		return 1;
+		exit(69);
 	}
 
 	if (strcmp(token, "cd") == 0) {
@@ -139,13 +138,8 @@ int handle(int argc, char **argv, char *PATH, char *prompt) {
 		}
 	}
 
-<<<<<<< HEAD
 	if (strcmp(token, "path") == 0) {
 		if (DEBUG) printf ("sick dude that says path\n");
-=======
-	if (strcmp(token, path_str) == 0) {
-		if (DEBUG) printf ("sick dude that says path\n");
->>>>>>> b7f9b14725082223692b327d8ebddec815ff7ef2
 			if (argc == 1) {
 				printf("%s\n",PATH);
 			} else {
@@ -197,32 +191,30 @@ int main (int argc, char** argv)
 		while((nread = getline(&line, &len, fp)) != -1) {
 			char *token = strtok(line, "&");
 			while (token != NULL) {
+				printf("token: %s\n", token);
 				pid = fork();
 				if(pid == 0) {
-					printf("now in child\n");
+					printf("now in child, handling: %s\n", token);
 					char *cmd, *out;
-					cmd = strtok(line, ">");
+					cmd = strtok(token, ">");
 					out = strtok(NULL, ">");
 					if(out != NULL) {
-						strcpy(line, trim(cmd));
 						freopen(trim(out), "w", stdout);
 						freopen(trim(out), "w", stderr);
 					}
-					char **args = parse(line);
+					char **args = parse(trim(cmd));
 					printf("cmd: %s\n", args[0]);
-					handle(count_spaces_in_line(line) + 1, args, PATH, prompt);
+					handle(count_spaces_in_line(trim(token)) + 1, args, PATH, prompt);
 					free(args);
 					exit(1);
 				}
 				token = strtok(NULL, "&");
 			}
-			wait(NULL);
-			int rc = 1;
-			while(rc > 0) {
-				rc = wait(&rc);
-				int exit_code = WEXITSTATUS(rc);
-				printf("exit code was: %d\n", exit_code);
-				if(exit_code == 1) {
+			int rc;
+			waitpid(pid, &rc, 0);
+			if(WIFEXITED(rc)) {
+				printf("exit code: %d\n", WEXITSTATUS(rc));
+				if(WEXITSTATUS(rc) == 69) {
 					exit(0);
 				}
 			}
