@@ -9,7 +9,7 @@
 #include <sys/wait.h>
 
 
-const int DEBUG = 1;
+const int DEBUG = 0;
 
 
 // trim takes a string and returns the string without any whitespace on the ends
@@ -99,11 +99,16 @@ int handle(int argc, char **argv, char *PATH, char *prompt) {
 
 	token = trim(argv[0]);
 
+	//here is the builtin exit command, it should free memory of path and prompt
 	if (strcmp(token, "exit") == 0) {
 		if (DEBUG) printf ("sick dude that says exit\n");
+		free(prompt);
+		free(PATH);
 		exit(69);
 	}
 
+
+	//this is cd. cd is like a floppy disk but looks futuristic
 	if (strcmp(token, "cd") == 0) {
 		if (DEBUG) printf ("sick dude that says cd\n");
 
@@ -144,24 +149,38 @@ int handle(int argc, char **argv, char *PATH, char *prompt) {
 		}
 	}
 
-	if (strcmp(token, "path") == 0) {
+
+	// if you do the builtin "path" with out any additional arguments,
+	//    it'll print all the searchable directories
+	// if you do it with other args (as many as you want) it'll add those
+	//    to the searchable directories that it searches thru when u want it to do stuff.
+	if (strcmp(token, "path") == 0) 
+	{
 		if (DEBUG) printf ("sick dude that says path\n");
-			if (argc == 1) {
-				printf("%s\n",PATH);
-			} else {
-				int i = 1;
-				for(; i < argc; i++){
-					token = argv[i];
-					if (DEBUG) printf("token is '%s'\n", token);
-					strcat(PATH, " ");
-					strcat(PATH, token);
-				}
+		if (argc == 1) {
+			printf("%s\n",PATH);
+		} else {
+			int i = 1;
+			for(; i < argc; i++){
+				token = argv[i];
+				if (DEBUG) printf("token is '%s'\n", token);
+				strcat(PATH, " ");
+				strcat(PATH, token);
 			}
 		}
+	}
 
+	// this is so cool, it takes PATH automatically and looks all the entire
+    // environment for the command argv[0] and automatically does that command
+    // to all the other things in argv which is super cool.
 	execvp(argv[0], argv);
 }
+// finally, handle is over
 
+
+// this is main. main takes some args if u want it to. if u give it multiple args,
+// it will try to run it as batch mode. it will throw an error if u give it too many
+// args. it will run in interactive mode otherwise.
 int main (int argc, char** argv)
 {
 	//creating prompt and PATH char*
@@ -196,13 +215,18 @@ int main (int argc, char** argv)
 		int pid;
 		while((nread = getline(&line, &len, fp)) != -1) {
 			int i = 0;
+			// we count for ampersands so that we know how many children there will be
 			int pidc = count_char_in_line(line, '&') + 1;
 			int pids[pidc];
 			int rcs[pidc];
 			char *token = strtok(line, "&");
 			while (token != NULL) {
 				printf("token: %s\n", token);
+				
+				//here we make a child, I'm sorry, eitan, we like having one big 100-line function that does everything. we like spaghetti. 
 				pid = fork();
+				
+				// in the case where this is now a child, it does child things 
 				if(pid == 0) {
 					printf("now in child, handling: %s\n", token);
 					char *cmd, *out;
@@ -217,7 +241,9 @@ int main (int argc, char** argv)
 					handle(count_char_in_line(trim(token), ' ') + 1, args, PATH, prompt);
 					free(args);
 					exit(1);
+				//here is what the parent does:
 				} else {
+					// the parent keeps track of its children because im 2% sure that's what parents do
 					pids[i] = pid;
 					i ++;
 				}
@@ -239,6 +265,7 @@ int main (int argc, char** argv)
 			printf("%s",prompt);
 		}
 	}
+	//freeing memory because memory sucks and we want to get rid of it
 	free(prompt);
 	free(line);
 	fclose(fp);
