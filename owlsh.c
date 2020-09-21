@@ -189,6 +189,10 @@ int main (int argc, char** argv)
 		printf("%s",prompt);
 		int pid;
 		while((nread = getline(&line, &len, fp)) != -1) {
+			int i = 0;
+			int pidc = count_char_in_line(line, '&') + 1;
+			int pids[pidc];
+			int rcs[pidc];
 			char *token = strtok(line, "&");
 			while (token != NULL) {
 				printf("token: %s\n", token);
@@ -207,17 +211,25 @@ int main (int argc, char** argv)
 					handle(count_char_in_line(trim(token), ' ') + 1, args, PATH, prompt);
 					free(args);
 					exit(1);
+				} else {
+					pids[i] = pid;
+					i ++;
 				}
 				token = strtok(NULL, "&");
 			}
-			int rc;
-			waitpid(pid, &rc, 0);
-			if(WIFEXITED(rc)) {
-				printf("exit code: %d\n", WEXITSTATUS(rc));
-				if(WEXITSTATUS(rc) == 69) {
-					exit(0);
+			i = 0;
+			for(; i < pidc; i++) {
+				waitpid(pids[i], &rcs[i], 0);
+			}
+			for(i = 0; i < pidc; i++) {
+				if(WIFEXITED(rcs[i])) {
+					printf("exit code: %d\n", WEXITSTATUS(rcs[i]));
+					if(WEXITSTATUS(rcs[i]) == 69) {
+						exit(0);
+					}
 				}
 			}
+
 			printf("%s",prompt);
 		}
 	}
