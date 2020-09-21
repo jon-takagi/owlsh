@@ -132,34 +132,7 @@ int handle(int argc, char **argv, char *PATH, char *prompt) {
 			free(old_prompt);
 			if (DEBUG) printf( "new prompt is %s\n", prompt);
 			if (DEBUG) printf("NEW directory is: %s\n", getcwd(s, 100));
-		} else {
-			token = argv[1];
-			char s[100];
-			if (DEBUG) printf("current directory is: %s\n", getcwd(s, 100));
-			if (DEBUG) printf("current token is: ~<3%s\n~<3", token);
-			int zeroForSuccess = chdir(token);
-			if (zeroForSuccess == 0)
-			{
-				if (DEBUG) printf("nice, your cd command worked\n");
-				char *old_prompt = (char*) calloc(261, sizeof(char));
-				strcpy(old_prompt, prompt);
-
-				//clearing prompt
-				memset (prompt, 0, sizeof(prompt));
-
-				strcpy(prompt, token);
-				strcat(prompt,"/");
-				strcat(prompt, old_prompt);
-
-				free(old_prompt);
-				if (DEBUG) printf( "new prompt is %s\n", prompt);
-			}
-			else {
-				printf("that's not a directory :(\n");
-			}
-			if (DEBUG) printf("NEW directory is: %s\n", getcwd(s, 100));
 		}
->>>>>>> 3fe90ef5f01dd7a53a76efd390ccf62c053819d2
 	}
 
 	if (strcmp(token, "path") == 0) {
