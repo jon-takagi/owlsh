@@ -77,25 +77,24 @@ int handle(int argc, char **argv, char *PATH, char *prompt) {
 
 	if(DEBUG) printf("number of args is %i\n", argc);
 
-	if (argc == 0)
-	{
+	if (argc == 0){
 		return -1;
 	}
 
 	for(; i < argc; i++) {
 		printf("%s\n", argv[i]);
 	}
-		token = trim(argv[0]);
+	token = trim(argv[0]);
 
-		char exit_str[] = "exit";
-		char *cd = "cd"; // I want to try all the different ways of making strings
-		char *path_str = "path";
-		if (strcmp(token, exit_str) == 0) {
-			if (DEBUG) printf ("sick dude that says exit\n");
-			exit(0);
-		}
+	char exit_str[] = "exit";
+	char *cd = "cd"; // I want to try all the different ways of making strings
+	char *path_str = "path";
+	if (strcmp(token, exit_str) == 0) {
+		if (DEBUG) printf ("sick dude that says exit\n");
+		exit(0);
+	}
 
-		if (strcmp(token, cd) == 0) {
+	if (strcmp(token, cd) == 0) {
 			if (DEBUG) printf ("sick dude that says cd\n");
 
 			//execute chdir with the next token
@@ -137,23 +136,22 @@ int handle(int argc, char **argv, char *PATH, char *prompt) {
 			}
 		}
 
-		if (strcmp(token, path_str) == 0) {
-			if (DEBUG) printf ("sick dude that says path\n");
+	if (strcmp(token, path_str) == 0) {
+		if (DEBUG) printf ("sick dude that says path\n");
 
-			if (argc == 1+1) {
-				printf("%s\n",PATH);
-			}
-			else {
-				int i = 1;
-				for(; i < argc -1; i++){
-					token = argv[i];
-					if (DEBUG) printf("token is '%s'\n", token);
-					strcat(PATH, " ");
-					strcat(PATH, token);
-				}
-			}
-
+		if (argc == 1+1) {
+			printf("%s\n",PATH);
 		}
+		else {
+			int i = 1;
+			for(; i < argc -1; i++){
+				token = argv[i];
+				if (DEBUG) printf("token is '%s'\n", token);
+				strcat(PATH, " ");
+				strcat(PATH, token);
+			}
+		}
+	}
 
 		//printf("%s\n", argv[i]);
 		// fprintf(stderr, "%s\n", argv[i]);
@@ -197,19 +195,13 @@ int main (int argc, char** argv)
 	} else {
 		printf("%s",prompt);
 		while((nread = getline(&line, &len, fp)) != -1) {
-            char *cmd1 = strtok(line, "&");
-            char *cmd2;
-            cmd2 = strtok(NULL, "&");
-            if(cmd2 != NULL) {
-                printf("%s \n %s", trim(cmd1), trim(cmd2));
-                printf("%c \n", strlen(trim(cmd1)));
+            char *token = strtok(line, "&");
+            while(token != null) {
                 int pid = fork();
                 if(pid == 0) {
-                    // in child, do cmd 2
-                    // execute 
-                } else {
-
+                    handle(token);
                 }
+                token = strtok(NULL, "&");
             }
 		}
 		free(prompt);

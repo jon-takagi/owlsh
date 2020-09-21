@@ -73,7 +73,7 @@ char** parse(char *line) {
 }
 int handle(int argc, char **argv, char *PATH, char *prompt) {
 	int i = 0;
-	char* token;
+	char* cmd;
 
 	if(DEBUG) printf("number of args is %i\n", argc);
 
@@ -85,7 +85,7 @@ int handle(int argc, char **argv, char *PATH, char *prompt) {
 		printf("%s\n", argv[i]);
 	}
 
-	token = trim(argv[0]);
+	cmd = trim(argv[0]);
 	char exit_str[] = "exit";
 	char *cd = "cd"; // I want to try all the different ways of making strings
 	char *path_str = "path";
@@ -150,15 +150,8 @@ int handle(int argc, char **argv, char *PATH, char *prompt) {
 				}
 			}
 		}
-	}
 
-
-		//printf("%s\n", argv[i]);
-		// fprintf(stderr, "%s\n", argv[i]);
-		//printf("%s\n", argv[i]);
-		//fprintf(stderr, "%s\n", argv[i]);
-
-	//}
+	execvp(args[0], args);
 }
 
 int main (int argc, char** argv)
@@ -171,8 +164,6 @@ int main (int argc, char** argv)
 	char* name_of_prompt = "owlsh> ";
 	char *prompt = (char*) calloc(261, sizeof(char));
 	strcpy(prompt, name_of_prompt);
-
-
 
 	char error_message[30] = "An error has occurred\n";
 	int BUFFER_SIZE = sysconf(ARG_MAX);
@@ -195,20 +186,26 @@ int main (int argc, char** argv)
 	} else {
 		printf("%s",prompt);
 		while((nread = getline(&line, &len, fp)) != -1) {
-			char *cmd, *out;
-			cmd = strtok(line, ">");
-			out = strtok(NULL, ">");
-			if(out != NULL) {
-				// printf("%s", out);
-				strcpy(line, trim(cmd));
-				freopen(trim(out), "w", stdout);
-				freopen(trim(out), "w", stderr);
+			char *token = strok(line, "&");
+			while (token != NULL) {
+				int pid = fork();
+				if(pid == 0) {
+					char *cmd, *out;
+					cmd = strtok(line, ">");
+					out = strtok(NULL, ">");
+					if(out != NULL) {
+						// printf("%s", out);
+						strcpy(line, trim(cmd));
+						freopen(trim(out), "w", stdout);
+						freopen(trim(out), "w", stderr);
+					}
+					char **args = parse(line);
+					handle(count_spaces_in_line(line) + 1, args, PATH, prompt);
+					free(args);
+					printf("%s",prompt);
+				}
+				token = strtok(NULL, "&");
 			}
-			char **args = parse(cmd);
-			handle(count_spaces_in_line(cmd) + 1, args, PATH, prompt);
-			//printf("%s",prompt);
-			free(args);
-			printf("%s",prompt);
 		}
 		free(prompt);
 	}
