@@ -71,27 +71,31 @@ char** parse(char *line) {
     }
     return args;
 }
+
 int handle(int argc, char **argv, char *PATH, char *prompt) {
 	int i = 0;
 	char* token;
 
-	if(DEBUG) printf("number of args is %i\n", argc);
+	if(DEBUG) {
+		printf("number of args is %i\n", argc);
+		for(; i < argc; i++) {
+			printf("%s\n", argv[i]);
+		}
+	}
 
 	if (argc == 0){
 		return -1;
-	}
-
-	for(; i < argc; i++) {
-		printf("%s\n", argv[i]);
 	}
 
 	token = trim(argv[0]);
 	char exit_str[] = "exit";
 	char *cd = "cd"; // I want to try all the different ways of making strings
 	char *path_str = "path";
-	if (strcmp(token, exit_str) == 0) {
+
+	if (strcmp(token, "exit") == 0) {
 		if (DEBUG) printf ("sick dude that says exit\n");
-		exit(0);
+		exit(1);
+		return 1;
 	}
 
 	if (strcmp(token, cd) == 0) {
@@ -185,30 +189,42 @@ int main (int argc, char** argv)
 		exit(1);
 	} else {
 		printf("%s",prompt);
+		int pid;
 		while((nread = getline(&line, &len, fp)) != -1) {
+			printf("%s",prompt);
 			char *token = strtok(line, "&");
 			while (token != NULL) {
-				int pid = fork();
+				pid = fork();
 				if(pid == 0) {
+					printf("now in child\n");
 					char *cmd, *out;
 					cmd = strtok(line, ">");
 					out = strtok(NULL, ">");
 					if(out != NULL) {
-						// printf("%s", out);
 						strcpy(line, trim(cmd));
 						freopen(trim(out), "w", stdout);
 						freopen(trim(out), "w", stderr);
 					}
 					char **args = parse(line);
+					printf("cmd: %s\n", args[0]);
 					handle(count_spaces_in_line(line) + 1, args, PATH, prompt);
 					free(args);
-					printf("%s",prompt);
 				}
 				token = strtok(NULL, "&");
 			}
+			wait(NULL);
+			int rc = 1;
+			while(rc > 0) {
+				rc = wait(&rc);
+				int exit_code = WEXITSTATUS(rc);
+				printf("exit code was: %d\n", exit_code);
+				if(exit_code == 1) {
+					return 0;
+				}
+			}
 		}
-		free(prompt);
 	}
+	free(prompt);
 	free(line);
 	fclose(fp);
 	return 0;
