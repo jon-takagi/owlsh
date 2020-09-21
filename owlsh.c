@@ -73,6 +73,14 @@ char** parse(char *line) {
     return args;
 }
 
+
+// handles a command and executes either a builtin or searches path for it
+// args:
+//   argc  - number of things in argv
+//   argv  - a list of all the args
+//   PATH  - this is the PATH that has all the searchable directories in it
+//   prompt- what's shown before "owlsh>" in the prompty thing
+// returns -1 if it fails, but that's chill. it's allowed to fail. failures are how the code learns 😊👐
 int handle(int argc, char **argv, char *PATH, char *prompt) {
 	int i = 0;
 	char* token;
@@ -116,8 +124,6 @@ int handle(int argc, char **argv, char *PATH, char *prompt) {
 			if (zeroForSuccess == 0)
 			{
 				if (DEBUG) printf("nice, your cd command worked\n");
-				// WE HAVE TO VALGRIND THIS: DEF A MEMORY LEAK HERE
-				//char new_prompt[260]; //that's the max path length for windows
 				char *old_prompt = (char*) calloc(261, sizeof(char));
 				strcpy(old_prompt, prompt);
 
