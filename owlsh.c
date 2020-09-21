@@ -73,7 +73,7 @@ char** parse(char *line) {
 }
 int handle(int argc, char **argv, char *PATH, char *prompt) {
 	int i = 0;
-	char* cmd;
+	char* token;
 
 	if(DEBUG) printf("number of args is %i\n", argc);
 
@@ -85,7 +85,7 @@ int handle(int argc, char **argv, char *PATH, char *prompt) {
 		printf("%s\n", argv[i]);
 	}
 
-	cmd = trim(argv[0]);
+	token = trim(argv[0]);
 	char exit_str[] = "exit";
 	char *cd = "cd"; // I want to try all the different ways of making strings
 	char *path_str = "path";
@@ -151,7 +151,7 @@ int handle(int argc, char **argv, char *PATH, char *prompt) {
 			}
 		}
 
-	execvp(args[0], args);
+	execvp(argv[0], argv);
 }
 
 int main (int argc, char** argv)
@@ -186,7 +186,7 @@ int main (int argc, char** argv)
 	} else {
 		printf("%s",prompt);
 		while((nread = getline(&line, &len, fp)) != -1) {
-			char *token = strok(line, "&");
+			char *token = strtok(line, "&");
 			while (token != NULL) {
 				int pid = fork();
 				if(pid == 0) {
