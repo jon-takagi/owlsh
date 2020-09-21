@@ -1,0 +1,182 @@
+wish> token: path /bin tests
+
+now in child, handling: path /bin tests
+
+cmd: path
+number of args is 3
+path
+/bin
+tests
+sick dude that says path
+token is '/bin'
+token is 'tests'
+wish> token: path /bin tests
+
+exit code: 0
+wish> token: p1.sh > /tmp/output201 
+now in child, handling: p1.sh > /tmp/output201 
+wish> token: path /bin tests
+
+exit code: 0
+wish> token: p1.sh > /tmp/output201 
+token:  p2.sh > /tmp/output202 
+now in child, handling:  p2.sh > /tmp/output202 
+wish> token: path /bin tests
+
+exit code: 0
+wish> token: p1.sh > /tmp/output201 
+token:  p2.sh > /tmp/output202 
+token:  p3.sh > /tmp/output203
+
+now in child, handling:  p3.sh > /tmp/output203
+
+wish> token: path /bin tests
+
+exit code: 0
+wish> token: p1.sh > /tmp/output201 
+token:  p2.sh > /tmp/output202 
+token:  p3.sh > /tmp/output203
+
+exit code: 0
+wish> token: cat /tmp/output201
+
+exit code: 1
+wish> token: cat /tmp/output202
+
+exit code: 1
+wish> token: cat /tmp/output203
+
+exit code: 1
+wish> token: rm -rf /tmp/output201
+
+now in child, handling: rm -rf /tmp/output201
+
+cmd: rm
+number of args is 3
+rm
+-rf
+/tmp/output201
+wish> token: path /bin tests
+
+exit code: 0
+wish> token: p1.sh > /tmp/output201 
+token:  p2.sh > /tmp/output202 
+token:  p3.sh > /tmp/output203
+
+exit code: 0
+wish> token: cat /tmp/output201
+
+exit code: 1
+wish> token: cat /tmp/output202
+
+exit code: 1
+wish> token: cat /tmp/output203
+
+exit code: 1
+wish> token: rm -rf /tmp/output201
+
+exit code: 0
+wish> token: rm -rf /tmp/output202
+
+now in child, handling: rm -rf /tmp/output202
+
+cmd: rm
+number of args is 3
+rm
+-rf
+/tmp/output202
+wish> token: path /bin tests
+
+exit code: 0
+wish> token: p1.sh > /tmp/output201 
+token:  p2.sh > /tmp/output202 
+token:  p3.sh > /tmp/output203
+
+exit code: 0
+wish> token: cat /tmp/output201
+
+exit code: 1
+wish> token: cat /tmp/output202
+
+exit code: 1
+wish> token: cat /tmp/output203
+
+exit code: 1
+wish> token: rm -rf /tmp/output201
+
+exit code: 0
+wish> token: rm -rf /tmp/output202
+
+exit code: 0
+wish> token: rm -rf /tmp/output203
+
+now in child, handling: rm -rf /tmp/output203
+
+cmd: rm
+number of args is 3
+rm
+-rf
+/tmp/output203
+wish> token: path /bin tests
+
+exit code: 0
+wish> token: p1.sh > /tmp/output201 
+token:  p2.sh > /tmp/output202 
+token:  p3.sh > /tmp/output203
+
+exit code: 0
+wish> token: cat /tmp/output201
+
+exit code: 1
+wish> token: cat /tmp/output202
+
+exit code: 1
+wish> token: cat /tmp/output203
+
+exit code: 1
+wish> token: rm -rf /tmp/output201
+
+exit code: 0
+wish> token: rm -rf /tmp/output202
+
+exit code: 0
+wish> token: rm -rf /tmp/output203
+
+exit code: 0
+wish> token: exit
+
+now in child, handling: exit
+
+cmd: exit
+number of args is 1
+exit
+entering builtin: exit
+wish> token: path /bin tests
+
+exit code: 0
+wish> token: p1.sh > /tmp/output201 
+token:  p2.sh > /tmp/output202 
+token:  p3.sh > /tmp/output203
+
+exit code: 0
+wish> token: cat /tmp/output201
+
+exit code: 1
+wish> token: cat /tmp/output202
+
+exit code: 1
+wish> token: cat /tmp/output203
+
+exit code: 1
+wish> token: rm -rf /tmp/output201
+
+exit code: 0
+wish> token: rm -rf /tmp/output202
+
+exit code: 0
+wish> token: rm -rf /tmp/output203
+
+exit code: 0
+wish> token: exit
+
+exit code: 69

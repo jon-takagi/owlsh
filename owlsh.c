@@ -91,10 +91,12 @@ int handle(int argc, char **argv, char *PATH, char *prompt) {
 			printf("%s\n", argv[i]);
 		}
 	}
-
-	if (argc == 0){
-		return -1;
-	}
+	//
+	// if (argc == 0){
+	// 	char error_message[30] = "An error has occurred\n";
+	// 	write(STDERR_FILENO, error_message, strlen(error_message));
+	// 	exit(0);
+	// }
 
 	token = trim(argv[0]);
 
@@ -104,7 +106,7 @@ int handle(int argc, char **argv, char *PATH, char *prompt) {
 		free(prompt);
 		free(PATH);
 		exit(69);
-	}
+	} else
 
 
 	//this is cd. cd is like a floppy disk but looks futuristic
@@ -120,14 +122,12 @@ int handle(int argc, char **argv, char *PATH, char *prompt) {
 		char s[100];
 		if (DEBUG) printf("current directory: %s\n", getcwd(s, 100));
 		if (DEBUG) printf("changing to: %s\n", token);
-		if(argc < 2) {
-			char error_message[30] = "An error has occurred\n";
-		    write(STDERR_FILENO, error_message, strlen(error_message));
+		if(argc != 1) {
+			// char error_message[30] = "An error has occurred\n";
+		    // write(STDERR_FILENO, error_message, strlen(error_message));
 		} else if (chdir(token) == 0)
 		{
 			if (DEBUG) printf("nice, your cd command worked\n");
-			// WE HAVE TO VALGRIND THIS: DEF A MEMORY LEAK HERE
-			//char new_prompt[260]; //that's the max path length for windows
 			char *old_prompt = (char*) calloc(261, sizeof(char));
 			strcpy(old_prompt, prompt);
 
@@ -148,8 +148,7 @@ int handle(int argc, char **argv, char *PATH, char *prompt) {
 	//    it'll print all the searchable directories
 	// if you do it with other args (as many as you want) it'll add those
 	//    to the searchable directories that it searches thru when u want it to do stuff.
-	if (strcmp(token, "path") == 0)
-	{
+	if (strcmp(token, "path") == 0){
 		if (DEBUG) printf ("sick dude that says path\n");
 		if (argc == 1) {
 			printf("%s\n",PATH);
@@ -163,12 +162,13 @@ int handle(int argc, char **argv, char *PATH, char *prompt) {
 
 			}
 		}
+	} else {
+		// this is so cool, it takes PATH automatically and looks all the entire
+	    // environment for the command argv[0] and automatically does that command
+	    // to all the other things in argv which is super cool.
+		execvp(argv[0], argv);
 	}
 
-	// this is so cool, it takes PATH automatically and looks all the entire
-    // environment for the command argv[0] and automatically does that command
-    // to all the other things in argv which is super cool.
-	execvp(argv[0], argv);
 }
 // finally, handle is over
 
@@ -183,7 +183,7 @@ int main (int argc, char** argv)
 	char *PATH = (char*) calloc(400, sizeof(char));
 	strcpy(PATH, path_initially);
 
-	char* name_of_prompt = "owlsh> ";
+	char* name_of_prompt = "wish> ";
 	char *prompt = (char*) calloc(261, sizeof(char));
 	strcpy(prompt, name_of_prompt);
 
@@ -208,7 +208,7 @@ int main (int argc, char** argv)
 		free(line);
 		exit(1);
 	} else {
-		printf("%s",prompt);
+		if(fp==stdin) printf("%s",prompt);
 		int pid;
 		while((nread = getline(&line, &len, fp)) != -1) {
 			int i = 0;
@@ -258,12 +258,12 @@ int main (int argc, char** argv)
 					}
 				}
 			}
-			printf("%s",prompt);
+			if(fp == stdin) printf("%s",prompt);
 		}
 	}
 	//freeing memory because memory sucks and we want to get rid of it
 	free(prompt);
 	free(line);
 	fclose(fp);
-	return 0;
+	exit(0);
 }

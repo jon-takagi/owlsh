@@ -1,0 +1,21 @@
+wish> token: ls >
+
+now in child, handling: ls >
+
+wish> token: ls >
+
+exit code: 0
+wish> token: exit
+
+now in child, handling: exit
+
+cmd: exit
+number of args is 1
+exit
+entering builtin: exit
+wish> token: ls >
+
+exit code: 0
+wish> token: exit
+
+exit code: 69

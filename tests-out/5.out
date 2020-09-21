@@ -1,0 +1,12 @@
+wish> token: exit bad
+
+now in child, handling: exit bad
+
+cmd: exit
+number of args is 2
+exit
+bad
+entering builtin: exit
+wish> token: exit bad
+
+exit code: 69

@@ -1,0 +1,19 @@
+wish> token:                     
+
+wish> token:           echo test variable whitespace!           
+
+wish> token: exit
+
+now in child, handling: exit
+
+cmd: exit
+number of args is 1
+exit
+entering builtin: exit
+wish> token:                     
+
+wish> token:           echo test variable whitespace!           
+
+wish> token: exit
+
+exit code: 69

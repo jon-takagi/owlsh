@@ -1,0 +1,38 @@
+wish> token: cd tests/p2a-test
+
+now in child, handling: cd tests/p2a-test
+
+cmd: cd
+number of args is 2
+cd
+tests/p2a-test
+entering builtin: cd
+current directory: /reed.edu/home/j/o/jontakagi/os/shell
+changing to: tests/p2a-test
+nice, your cd command worked
+new prompt is tests/p2a-test/wish> 
+NEW directory is: /reed.edu/home/j/o/jontakagi/os/shell/tests/p2a-test
+
+
+batch.sh
+forktest.c
+hello.txt
+Makefile
+owlsh
+owlsh.c
+parser.c
+readme.md
+README.md
+redir.c
+strok_ex.c
+tests
+tests-out
+test-wish.sh
+wish
+wish> token: cd tests/p2a-test
+
+exit code: 0
+wish> token: ls
+
+exit code: 0
+wish> 

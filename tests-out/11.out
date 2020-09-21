@@ -1,0 +1,52 @@
+wish> token: ls tests/p2a-test>/tmp/output11
+
+now in child, handling: ls tests/p2a-test>/tmp/output11
+
+test1
+test2
+test3
+test4
+wish> token: ls tests/p2a-test>/tmp/output11
+
+exit code: 0
+wish> token: cat /tmp/output11
+
+exit code: 0
+wish> token: rm -f /tmp/output11
+
+now in child, handling: rm -f /tmp/output11
+
+cmd: rm
+number of args is 3
+rm
+-f
+/tmp/output11
+wish> token: ls tests/p2a-test>/tmp/output11
+
+exit code: 0
+wish> token: cat /tmp/output11
+
+exit code: 0
+wish> token: rm -f /tmp/output11
+
+exit code: 0
+wish> token: exit
+
+now in child, handling: exit
+
+cmd: exit
+number of args is 1
+exit
+entering builtin: exit
+wish> token: ls tests/p2a-test>/tmp/output11
+
+exit code: 0
+wish> token: cat /tmp/output11
+
+exit code: 0
+wish> token: rm -f /tmp/output11
+
+exit code: 0
+wish> token: exit
+
+exit code: 69

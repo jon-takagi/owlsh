@@ -1,0 +1,24 @@
+wish> token: p1.sh
+
+now in child, handling: p1.sh
+
+cmd: p1.sh
+number of args is 1
+p1.sh
+wish> token: p1.sh
+
+exit code: 0
+wish> token: exit
+
+now in child, handling: exit
+
+cmd: exit
+number of args is 1
+exit
+entering builtin: exit
+wish> token: p1.sh
+
+exit code: 0
+wish> token: exit
+
+exit code: 69

@@ -1,0 +1,59 @@
+wish> token: path tests
+
+now in child, handling: path tests
+
+cmd: path
+number of args is 2
+path
+tests
+sick dude that says path
+token is 'tests'
+wish> token: path tests
+
+exit code: 0
+wish> token: p1.sh 
+now in child, handling: p1.sh 
+cmd: p1.sh
+number of args is 1
+p1.sh
+wish> token: path tests
+
+exit code: 0
+wish> token: p1.sh 
+token:  p2.sh 
+token:  p3.sh
+
+now in child, handling:  p3.sh
+
+cmd: p3.sh
+number of args is 1
+p3.sh
+wish> token: path tests
+
+exit code: 0
+wish> token: p1.sh 
+token:  p2.sh 
+token:  p3.sh
+
+exit code: 0
+exit code: 0
+wish> token: exit
+
+now in child, handling: exit
+
+cmd: exit
+number of args is 1
+exit
+entering builtin: exit
+wish> token: path tests
+
+exit code: 0
+wish> token: p1.sh 
+token:  p2.sh 
+token:  p3.sh
+
+exit code: 0
+exit code: 0
+wish> token: exit
+
+exit code: 69
