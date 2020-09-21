@@ -120,7 +120,10 @@ int handle(int argc, char **argv, char *PATH, char *prompt) {
 		char s[100];
 		if (DEBUG) printf("current directory: %s\n", getcwd(s, 100));
 		if (DEBUG) printf("changing to: %s\n", token);
-		if (chdir(token) == 0)
+		if(argc < 2) {
+			char error_message[30] = "An error has occurred\n";
+		    write(STDERR_FILENO, error_message, strlen(error_message));
+		} else if (chdir(token) == 0)
 		{
 			if (DEBUG) printf("nice, your cd command worked\n");
 			// WE HAVE TO VALGRIND THIS: DEF A MEMORY LEAK HERE
@@ -145,7 +148,7 @@ int handle(int argc, char **argv, char *PATH, char *prompt) {
 	//    it'll print all the searchable directories
 	// if you do it with other args (as many as you want) it'll add those
 	//    to the searchable directories that it searches thru when u want it to do stuff.
-	if (strcmp(token, "path") == 0) 
+	if (strcmp(token, "path") == 0)
 	{
 		if (DEBUG) printf ("sick dude that says path\n");
 		if (argc == 1) {
@@ -215,13 +218,12 @@ int main (int argc, char** argv)
 			int rcs[pidc];
 			char *token = strtok(line, "&");
 			while (token != NULL) {
-				printf("token: %s\n", token);
-				
-				//here we make a child, I'm sorry, eitan, we like having one big 100-line function that does everything. we like spaghetti. 
+
+				//here we make a child, I'm sorry, eitan, we like having one big 100-line function that does everything. we like spaghetti.
 				if(DEBUG) printf("token: %s\n", token);
 				pid = fork();
-				
-				// in the case where this is now a child, it does child things 
+
+				// in the case where this is now a child, it does child things
 				if(pid == 0) {
 					if(DEBUG) printf("now in child, handling: %s\n", token);
 					char *cmd, *out;
@@ -235,7 +237,7 @@ int main (int argc, char** argv)
 					if(DEBUG) printf("cmd: %s\n", args[0]);
 					handle(count_char_in_line(trim(token), ' ') + 1, args, PATH, prompt);
 					free(args);
-					exit(1);
+					exit(0);
 				//here is what the parent does:
 				} else {
 					// the parent keeps track of its children because im 2% sure that's what parents do
