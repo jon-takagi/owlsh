@@ -8,7 +8,6 @@
 #include <ctype.h> // for isspace
 #include <sys/wait.h>
 
-
 const int DEBUG = 0;
 
 
@@ -193,6 +192,9 @@ int main (int argc, char** argv)
 	char *line = NULL;
 	size_t len = 0;
 	ssize_t nread;
+	char *path_initially = " ";
+	char *PATH = (char*) calloc(400, sizeof(char));
+	strcpy(PATH, path_initially);
 	//if there be args, then assume it's a file and read from the first one
 	if (argc > 2) {
 		write(STDERR_FILENO, error_message, strlen(error_message));
@@ -242,7 +244,7 @@ int main (int argc, char** argv)
 				} else {
 					// the parent keeps track of its children because im 2% sure that's what parents do
 					pids[i] = pid;
-					i ++;
+					i++;
 				}
 				token = strtok(NULL, "&");
 			}
