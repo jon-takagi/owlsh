@@ -86,6 +86,7 @@ int handle(int argc, char **argv, char *PATH, char *prompt) {
 
 	if (argc == 0){
 		return -1;
+
 	}
 
 	token = trim(argv[0]);
@@ -138,8 +139,13 @@ int handle(int argc, char **argv, char *PATH, char *prompt) {
 		}
 	}
 
+<<<<<<< HEAD
 	if (strcmp(token, "path") == 0) {
 		if (DEBUG) printf ("sick dude that says path\n");
+=======
+	if (strcmp(token, path_str) == 0) {
+		if (DEBUG) printf ("sick dude that says path\n");
+>>>>>>> b7f9b14725082223692b327d8ebddec815ff7ef2
 			if (argc == 1) {
 				printf("%s\n",PATH);
 			} else {
