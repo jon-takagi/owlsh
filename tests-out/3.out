@@ -1,0 +1,17 @@
+wish> token: ls /no/such/file
+
+exit code: 2
+wish> token: exit
+
+now in child, handling: exit
+
+cmd: exit
+number of args is 1
+exit
+entering builtin: exit
+wish> token: ls /no/such/file
+
+exit code: 2
+wish> token: exit
+
+exit code: 69

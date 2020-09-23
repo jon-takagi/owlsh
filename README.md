@@ -1,4 +1,3 @@
-
 # WI Shell
 By Ariel Flaster and Jon Takagi
 ## Program Specifications
